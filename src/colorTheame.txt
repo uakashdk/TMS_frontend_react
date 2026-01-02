@@ -1,0 +1,67 @@
+| Area                | Color      | Hex       |
+| ------------------- | ---------- | --------- |
+| Full App Background | Soft White | `#F8FAFC` |
+| Page Container      | White      | `#FFFFFF` |
+| Section Divider     | Light Gray | `#E5E7EB` |
+
+| Element                | Color      | Hex       |
+| ---------------------- | ---------- | --------- |
+| Header Background      | White      | `#FFFFFF` |
+| Header Bottom Border   | Light Gray | `#E5E7EB` |
+| Logo Text              | Navy Blue  | `#0F1E3A` |
+| Header Icons           | Navy Blue  | `#0F1E3A` |
+| Icon Hover             | Green      | `#2ECC71` |
+| Profile Dropdown Hover | Soft Gray  | `#F1F5F9` |
+
+| Element              | Color     | Hex       |
+| -------------------- | --------- | --------- |
+| Sidebar Background   | Navy Blue | `#0F1E3A` |
+| Sidebar Border Right | Dark Blue | `#142C54` |
+
+| State  | Background  | Text/Icon |
+| ------ | ----------- | --------- |
+| Normal | Transparent | `#FFFFFF` |
+| Hover  | `#142C54`   | `#2ECC71` |
+| Active | `#2ECC71`   | `#0F1E3A` |
+
+| Text Type   | Color      | Hex       |
+| ----------- | ---------- | --------- |
+| Page Title  | Dark Navy  | `#0B132B` |
+| Card Title  | Navy Blue  | `#0F1E3A` |
+| Normal Text | Dark Gray  | `#374151` |
+| Muted Text  | Gray       | `#6B7280` |
+| Placeholder | Light Gray | `#9CA3AF` |
+
+| Element           | Color       | Hex                   |
+| ----------------- | ----------- | --------------------- |
+| Card Background   | White       | `#FFFFFF`             |
+| Card Border       | Light Gray  | `#E5E7EB`             |
+| Card Hover Shadow | Soft Shadow | `rgba(15,30,58,0.08)` |
+
+| Property   | Color     |
+| ---------- | --------- |
+| Background | `#0F1E3A` |
+| Text       | `#FFFFFF` |
+| Hover      | `#142C54` |
+| Disabled   | `#94A3B8` |
+
+| Property   | Color     |
+| ---------- | --------- |
+| Background | `#2ECC71` |
+| Text       | `#FFFFFF` |
+| Hover      | `#27AE60` |
+
+| Property   | Color     |
+| ---------- | --------- |
+| Border     | `#0F1E3A` |
+| Text       | `#0F1E3A` |
+| Hover BG   | `#0F1E3A` |
+| Hover Text | `#FFFFFF` |
+
+| State  | Border    | Background |
+| ------ | --------- | ---------- |
+| Normal | `#E5E7EB` | `#FFFFFF`  |
+| Focus  | `#2ECC71` | `#FFFFFF`  |
+| Error  | `#EF4444` | `#FEF2F2`  |
+
+lable Color: #374151
