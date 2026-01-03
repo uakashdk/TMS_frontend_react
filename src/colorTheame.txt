@@ -65,3 +65,81 @@
 | Error  | `#EF4444` | `#FEF2F2`  |
 
 lable Color: #374151
+
+
+
+src/
+│
+├─ app/
+│   ├─ App.js                 # Root component
+│   ├─ routes.js              # All route definitions (array of objects)
+│   ├─ router.js              # React Router setup using routes.js
+│
+├─ components/
+│   ├─ layout/
+│   │   ├─ AppHeader.js       # Top header
+│   │   ├─ AppSidebar.js      # Sidebar / navigation
+│   │   └─ AppLayout.js       # Header + Sidebar wrapper
+│   │
+│   └─ common/
+│       ├─ Button.js
+│       ├─ Input.js
+│       ├─ Loader.js
+│       └─ NotFound.js
+│
+├─ pages/
+│   └─ tms/
+│       ├─ dashboard/
+│       │   └─ Dashboard.js
+│       │
+│       ├─ companies/
+│       │   └─ Companies.js
+│       │
+│       ├─ trips/
+│       │   └─ Trips.js
+│       │
+│       └─ drivers/
+│           └─ Drivers.js
+│
+├─ services/
+│   ├─ axios.js               # Axios instance + interceptors
+│   ├─ auth.service.js        # Login / logout / user profile
+│   └─ tms.service.js         # TMS related APIs
+│
+├─ guards/
+│   └─ PermissionGuard.js     # Route-level permission check
+│
+├─ constants/
+│   ├─ permissions.js         # Permission keys
+│   ├─ roles.js               # Role keys
+│   └─ routeKeys.js           # Route identifiers
+│
+├─ src/
+├─ store/
+│   ├─ store.js           # Redux store setup
+│   └─ features/
+│       ├─ auth/
+│       │   ├─ authSlice.js
+│       │   └─ authAPI.js (optional, for RTK Query)
+│       └─ tms/
+│           ├─ tmsSlice.js
+│           └─ tmsAPI.js (optional)
+
+│
+├─ utils/
+│   └─ route.helper.js        # Helper to filter routes for sidebar
+│
+├─ assets/
+│   ├─ images/
+│   └─ icons/
+│
+├─ styles/
+│   └─ global.css
+│
+├─ config/
+│   └─ env.js                 # Env variable mapping
+│
+├─ index.js                   # React DOM entry
+└─ reportWebVitals.js
+================================
+right now my folder is exactly like this so tell me which file is .js and which is .jsx 
