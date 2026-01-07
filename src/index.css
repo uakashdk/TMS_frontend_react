@@ -1,1 +1,66 @@
 @import "tailwindcss";
+
+
+@theme {
+  /* --------------------------------------------------
+     1. PRIMARY BRAND COLORS
+  -------------------------------------------------- */
+
+  --color-fleet-primary: #1E88E5;          /* Primary Blue */
+  --color-fleet-primary-dark: #0D47A1;     /* Dark Blue */
+
+  /* --------------------------------------------------
+     2. ACCENT COLORS
+  -------------------------------------------------- */
+
+  --color-fleet-accent: #FB8C00;            /* Primary Orange */
+  --color-fleet-accent-light: #FFB74D;      /* Light Orange */
+
+  /* --------------------------------------------------
+     3. STATUS COLORS
+  -------------------------------------------------- */
+
+  --color-fleet-success: #43A047;           /* Success Green */
+  --color-fleet-success-light: #A5D6A7;     /* Light Green */
+
+  --color-fleet-warning: #FDD835;           /* Warning Yellow */
+  --color-fleet-danger: #E53935;            /* Error Red */
+
+  /* --------------------------------------------------
+     4. BACKGROUND & SURFACE
+  -------------------------------------------------- */
+
+  --color-fleet-bg: #F5F7FA;                 /* App Background */
+  --color-fleet-card: #FFFFFF;              /* Card / Panel */
+
+  /* --------------------------------------------------
+     5. TEXT COLORS
+  -------------------------------------------------- */
+
+  --color-fleet-text-primary: #263238;       /* Main Text */
+  --color-fleet-text-secondary: #607D8B;     /* Secondary Text */
+  --color-fleet-text-muted: #9E9E9E;         /* Disabled / Muted */
+
+  /* --------------------------------------------------
+     6. BORDERS & DIVIDERS
+  -------------------------------------------------- */
+
+  --color-fleet-border: #E0E0E0;
+
+  /* --------------------------------------------------
+     7. TABLE COLORS
+  -------------------------------------------------- */
+
+  --color-fleet-table-header-bg: #F1F5F9;
+  --color-fleet-table-header-text: #0D47A1;
+  --color-fleet-table-row-hover: #E3F2FD;
+
+  /* --------------------------------------------------
+     8. OPTIONAL DARK MODE (Future Ready)
+  -------------------------------------------------- */
+
+  --color-fleet-dark-bg: #121212;
+  --color-fleet-dark-card: #1E1E1E;
+  --color-fleet-dark-text: #E0E0E0;
+  --color-fleet-dark-accent: #64B5F6;
+}

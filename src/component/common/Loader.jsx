@@ -1,9 +1,12 @@
-import React from 'react'
+// src/components/common/Loader.js
+import React from "react";
 
 const Loader = () => {
   return (
-    <div>Loader</div>
-  )
-}
+    <div className="text-center text-orange-500 font-bold">
+      Loading...
+    </div>
+  );
+};
 
-export default Loader
+export default Loader;
