@@ -22,7 +22,7 @@ const AppLayout = ({ children }) => {
 
       {/* MOBILE SIDEBAR — ABOVE HEADER, LEFT, FULL HEIGHT */}
       <div
-        className={`fixed top-0 left-0 z-[999] h-screen w-64 bg-white shadow-xl
+        className={`fixed top-0 left-0 z-999 h-screen w-64 bg-white shadow-xl
         transform transition-transform duration-300 md:hidden
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
@@ -31,7 +31,7 @@ const AppLayout = ({ children }) => {
 
       {/* MOBILE OVERLAY */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-[998] bg-black/40 md:hidden" />
+        <div className="fixed inset-0 z-998 bg-black/40 md:hidden" />
       )}
 
       {/* CONTENT */}

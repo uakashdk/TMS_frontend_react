@@ -8,22 +8,26 @@ import Loader from "../component/common/Loader";
 
 const App = () => {
   const dispatch = useDispatch();
-  const [authChecked, setAuthChecked] = useState(false); // 🔑 flag
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
 
-    // 🔴 If no token → skip refresh, mark auth check done
+    // 🔴 No token → logout
     if (!token) {
-      dispatch(clearAuth()); // make sure Redux knows user is not logged in
+      dispatch(clearAuth());
       setAuthChecked(true);
       return;
     }
 
-    // 🔵 Token exists → try refresh
+    // 🔵 Token exists → refresh
     const initAuth = async () => {
       try {
         const data = await refreshTokenAPI();
+
+        // ✅ Persist new access token
+        localStorage.setItem("accessToken", data.accessToken);
+
         dispatch(
           setLogin({
             user: data.user,
@@ -33,14 +37,14 @@ const App = () => {
       } catch (err) {
         dispatch(clearAuth());
       } finally {
-        setAuthChecked(true); // 🔑 mark finished
+        setAuthChecked(true);
       }
     };
 
     initAuth();
   }, [dispatch]);
 
-  // ✅ Only render routes after auth check
+  // ✅ Render AFTER auth check
   if (!authChecked) {
     return (
       <div className="min-h-screen flex items-center justify-center">

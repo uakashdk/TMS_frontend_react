@@ -1,4 +1,4 @@
-import React,{lazy} from "react";
+import React from "react";
 
 const Login = React.lazy(()=>import("../pages/tms/auth/Login"))
 const Dashboard = React.lazy(()=>import("../pages/tms/dashboard/DashBoard"))
@@ -8,7 +8,8 @@ const AddUser = React.lazy(()=>import("../pages/tms/user/AddUser"))
 const EditUser = React.lazy(()=>import("../pages/tms/user/EditUser"))
 const Companies = React.lazy(()=>import("../pages/tms/companies/Companies"))
 const Drivers = React.lazy(()=>import("../pages/tms/driver/Driver"))
-
+const AddNewCompany = React.lazy(()=>import("../pages/tms/companies/AddNewCompany"))
+const UpdateNewCompany = React.lazy(()=>import("../pages/tms/companies/UpdateNewCompany"))
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -34,6 +35,14 @@ export const routes = [
     element: <Companies />,
     permission: "companies", // required permission
   },
+  {
+    path:"/add-new-company",
+    element:<AddNewCompany/>,
+  },
+  {
+  path: "/update-company/:companyId",
+  element: <UpdateNewCompany />
+},
   {
     path: "/trips",
     element: <Trips />,
