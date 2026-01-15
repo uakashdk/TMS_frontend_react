@@ -1,35 +1,26 @@
-import api from "./axios"
+import api from "./axios";
 
+/* ================= LOGIN ================= */
 export const login = async (credentials) => {
-  const response = await api.post("/auth/login", credentials);
-  return response.data;
-};
-
-export const logout = async () => {
-  const token = localStorage.getItem("accessToken");
-
   const response = await api.post(
-    "/auth/logout",
-    {}, // no body
+    "/auth/login",
+    credentials,
     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      withCredentials: true, // REQUIRED for refreshToken cookie
+      withCredentials: true, // ✅ REQUIRED to receive refreshToken cookie
     }
   );
-
   return response.data;
 };
 
 
+/* ================= REFRESH TOKEN ================= */
 export const refreshToken = async () => {
   try {
     const response = await api.post(
-      "/auth/refresh-token",
+      "/auth/refresh-token",   // ✅ must match backend route
       {},
       {
-        withCredentials: true
+        withCredentials: true, // ✅ sends refreshToken cookie
       }
     );
 
@@ -43,3 +34,21 @@ export const refreshToken = async () => {
   }
 };
 
+
+/* ================= LOGOUT ================= */
+export const logout = async () => {
+  const token = localStorage.getItem("accessToken");
+
+  const response = await api.post(
+    "/auth/logout",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true, // ✅ so backend can clear cookie
+    }
+  );
+
+  return response.data;
+};
