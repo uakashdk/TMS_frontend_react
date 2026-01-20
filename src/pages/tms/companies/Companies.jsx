@@ -25,24 +25,23 @@ const Companies = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { user } = useSelector((state) => state.auth);
-
-  const role = user?.role;
+  const roles = user?.role;
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!role) return;
+    if (!roles) return;
     fetchCompanies();
-  }, [role]);
+  }, [roles]);
 
   // ================= FETCH COMPANIES =================
   const fetchCompanies = async () => {
     setLoading(true);
 
     let response;
-    if (role === "super-admin") {
+    if (roles === "super-admin") {
       response = await getAllCompanies();
-    } else if (role === "company-admin") {
+    } else if (roles === "Company-Admin") {
       response = await getMyCompanies();
     }
 
@@ -56,7 +55,6 @@ const Companies = () => {
   // ================= FETCH SINGLE COMPANY =================
   const fetchCompany = async (companyId) => {
     const res = await getCompanyDetailsById(companyId);
-
     if (res?.success) {
       setCompanyDetails(res.data);
       setDocuments(res.documents || []);
@@ -113,7 +111,7 @@ const Companies = () => {
             </p>
           </div>
 
-          {role === "super-admin" && (
+          {roles === "super-admin" && (
             <button
               onClick={() => navigate("/add-new-company")}
               className="bg-blue-600 text-white px-4 py-2 rounded"
@@ -169,7 +167,7 @@ const Companies = () => {
                       {company.status}
                     </td>
                     <td className="px-6 py-4 flex gap-2">
-                      {role === "super-admin" && (
+                      {roles === "super-admin" && (
                         <button
                           onClick={() => {
                             setSelectedCompanyId(company.id);
@@ -190,6 +188,7 @@ const Companies = () => {
                       >
                         ✏
                       </button>
+                         {roles === "super-admin" && (
                       <button
                         onClick={() => {
                           setSelectedCompanyId(company.id);
@@ -199,6 +198,7 @@ const Companies = () => {
                       >
                         🗑 Delete Company
                       </button>
+                      )} 
 
 
                     </td>

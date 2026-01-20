@@ -37,92 +37,136 @@ const AddNewCompany = () => {
   };
 
   return (
-    <div className="min-h-screen bg-fleet-bg p-6 flex justify-center">
-      <div className="w-full max-w-3xl rounded-lg bg-fleet-card border border-fleet-border p-6">
-        <h2 className="text-xl font-semibold text-fleet-text-primary mb-6">
-          Add New Company
-        </h2>
+    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-8 flex justify-center items-start">
+      <div className="w-full max-w-4xl bg-white rounded-xl shadow-sm border border-slate-200">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Company Name */}
-          <div>
-            <label className="block text-sm text-fleet-text-secondary mb-1">
-              Company Name
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-fleet-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fleet-primary"
-            />
-          </div>
+        {/* Header */}
+        <div className="border-b border-slate-200 px-8 py-5">
+          <h2 className="text-2xl font-semibold text-slate-800">
+            Create New Company
+          </h2>
+          <p className="text-sm text-slate-500 mt-1">
+            Company and Company Admin will be created together
+          </p>
+        </div>
 
-          {/* Company Code */}
-          <div>
-            <label className="block text-sm text-fleet-text-secondary mb-1">
-              Company Code
-            </label>
-            <input
-              type="text"
-              name="company_code"
-              value={formData.company_code}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-fleet-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fleet-primary"
-            />
-          </div>
+        <form onSubmit={handleSubmit} className="p-8 space-y-8">
 
-          {/* Company Email */}
+          {/* ================= COMPANY DETAILS ================= */}
           <div>
-            <label className="block text-sm text-fleet-text-secondary mb-1">
-              Company Email
-            </label>
-            <input
-              type="email"
-              name="company_email"
-              value={formData.company_email}
-              onChange={handleChange}
-              required
-              className="w-full rounded-md border border-fleet-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fleet-primary"
-            />
-          </div>
+            <h3 className="text-lg font-medium text-slate-700 mb-4">
+              Company Details
+            </h3>
 
-          {/* Address */}
-          <div>
-            <label className="block text-sm text-fleet-text-secondary mb-1">
-              Address
-            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="name"
+                placeholder="Company Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+
+              <input
+                type="text"
+                name="company_code"
+                placeholder="Company Code"
+                value={formData.company_code}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+
+              <input
+                type="email"
+                name="company_email"
+                placeholder="Company Email"
+                value={formData.company_email}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+
+              <input
+                type="text"
+                name="contact_person"
+                placeholder="Contact Person"
+                value={formData.contact_person}
+                onChange={handleChange}
+                className="input"
+              />
+            </div>
+
             <textarea
               name="address"
+              placeholder="Company Address"
               value={formData.address}
               onChange={handleChange}
               rows="3"
-              className="w-full rounded-md border border-fleet-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fleet-primary"
+              className="input mt-4"
             />
           </div>
 
-          {/* Contact Person */}
+          {/* ================= COMPANY ADMIN DETAILS ================= */}
           <div>
-            <label className="block text-sm text-fleet-text-secondary mb-1">
-              Contact Person
-            </label>
-            <input
-              type="text"
-              name="contact_person"
-              value={formData.contact_person}
-              onChange={handleChange}
-              className="w-full rounded-md border border-fleet-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-fleet-primary"
-            />
+            <h3 className="text-lg font-medium text-slate-700 mb-4">
+              Company Admin Details
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <input
+                type="text"
+                name="Adminname"
+                placeholder="Admin Name"
+                value={formData.Adminname}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+
+              <input
+                type="email"
+                name="Adminemail"
+                placeholder="Admin Email"
+                value={formData.Adminemail}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+
+              <input
+                type="text"
+                name="Adminphone"
+                placeholder="Admin Phone"
+                value={formData.Adminphone}
+                onChange={handleChange}
+                className="input"
+              />
+
+              <input
+                type="password"
+                name="Adminpassword"
+                placeholder="Admin Password"
+                value={formData.Adminpassword}
+                onChange={handleChange}
+                required
+                className="input"
+              />
+            </div>
+
+            <p className="text-xs text-slate-500 mt-2">
+              * This user will be created as <strong>Company Admin</strong> automatically.
+            </p>
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4">
+          {/* ================= ACTIONS ================= */}
+          <div className="flex justify-end gap-3 pt-6 border-t border-slate-200">
             <button
               type="button"
               onClick={() => navigate("/companies")}
-              className="rounded-md border border-fleet-border px-4 py-2 text-sm text-fleet-text-secondary hover:bg-gray-100"
+              className="px-5 py-2 text-sm rounded-md border border-slate-300 text-slate-600 hover:bg-slate-50"
             >
               Cancel
             </button>
@@ -130,7 +174,7 @@ const AddNewCompany = () => {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-md bg-fleet-primary px-5 py-2 text-sm font-medium text-white hover:bg-fleet-primary-dark disabled:opacity-60"
+              className="px-6 py-2 text-sm rounded-md bg-slate-900 text-white hover:bg-slate-800 disabled:opacity-60"
             >
               {loading ? "Creating..." : "Create Company"}
             </button>

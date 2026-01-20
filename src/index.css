@@ -64,3 +64,8 @@
   --color-fleet-dark-text: #E0E0E0;
   --color-fleet-dark-accent: #64B5F6;
 }
+
+.input {
+  @apply w-full rounded-md border border-slate-300 px-3 py-2 text-sm
+  focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900;
+}
