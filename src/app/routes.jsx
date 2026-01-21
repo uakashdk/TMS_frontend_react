@@ -56,16 +56,14 @@ export const routes = [
   {
     path:"/user",
     element:<User/>,
-    permission:"user"
+    permission:"user-list"
   },
    {
     path:"/AddUser",
     element:<AddUser/>,
-    permission:"Adduser"
   },
   {
-    path:"/EditUser",
+    path:"/EditUser/:userId",
     element:<EditUser/>,
-    permission:"Edituser"
   }
 ];
