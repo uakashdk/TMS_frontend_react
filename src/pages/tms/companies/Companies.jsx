@@ -78,7 +78,6 @@ const Companies = () => {
   };
 
   const handleDocumentStatusChange = async (documentId, newStatus) => {
-    console.log("documentId===================>", documentId, "new status==================>", newStatus)
     await DocumentStatus(documentId, newStatus);
 
     // Update UI after success

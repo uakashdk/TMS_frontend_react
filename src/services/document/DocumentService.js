@@ -3,6 +3,17 @@ import api from "../axios";
 
 import toast from "react-hot-toast";
 
+
+export const DocumentUsers = async(documentId,DocumentStatus)=>{
+  try {
+     const response = await api.post(`/document/documentUsers/${documentId}`,{documentStatus: DocumentStatus});
+
+     toast.success(response.data.message ||"document status updated");
+  } catch (error) {
+    toast.error(error.message ||"document not update please try again")
+  }
+}
+
 export const uploadDocument = async (formData) => {
   try {
     const token = localStorage.getItem("accessToken");
@@ -30,16 +41,6 @@ export const uploadDocument = async (formData) => {
 export const DocumentStatus = async(documentId,DocumentStatus)=>{
   try {
      const response = await api.post(`/document/documentStatus/${documentId}`,{documentStatus: DocumentStatus});
-
-     toast.success(response.data.message ||"document status updated");
-  } catch (error) {
-    toast.error(error.message ||"document not update please try again")
-  }
-}
-
-export const DocumentUsers = async(documentId,DocumentStatus)=>{
-  try {
-     const response = await api.post(`/document/documentUsers/${documentId}`,{documentStatus: DocumentStatus});
 
      toast.success(response.data.message ||"document status updated");
   } catch (error) {

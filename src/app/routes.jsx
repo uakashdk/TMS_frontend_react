@@ -7,7 +7,9 @@ const User = React.lazy(()=>import("../pages/tms/user/UserList"))
 const AddUser = React.lazy(()=>import("../pages/tms/user/AddUser"))
 const EditUser = React.lazy(()=>import("../pages/tms/user/EditUser"))
 const Companies = React.lazy(()=>import("../pages/tms/companies/Companies"))
-const Drivers = React.lazy(()=>import("../pages/tms/driver/Driver"))
+const Drivers = React.lazy(()=>import("../pages/tms/driver/Driver"));
+const AddDriver = React.lazy(()=>import("../pages/tms/driver/AddDriver"));
+const UpdateDriver = React.lazy(()=>import("../pages/tms/driver/UpdateDriver"));
 const AddNewCompany = React.lazy(()=>import("../pages/tms/companies/AddNewCompany"))
 const UpdateNewCompany = React.lazy(()=>import("../pages/tms/companies/UpdateNewCompany"))
 export const routeKeys = {
@@ -49,11 +51,6 @@ export const routes = [
     permission: "create-trips", // required permission
   },
   {
-    path: "/drivers",
-    element: <Drivers />,
-    permission: "drivers", // required permission
-  },
-  {
     path:"/user",
     element:<User/>,
     permission:"user-list"
@@ -65,5 +62,18 @@ export const routes = [
   {
     path:"/EditUser/:userId",
     element:<EditUser/>,
+  },
+    {
+    path: "/drivers",
+    element: <Drivers />,
+    permission: "drivers-list", // required permission
+  },
+  {
+    path:"/add-drivers",
+    element:<AddDriver/>
+  },
+  {
+    path:"/edit-drivers/:id",
+    element:<UpdateDriver/>
   }
 ];
