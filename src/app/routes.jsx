@@ -10,8 +10,11 @@ const Companies = React.lazy(()=>import("../pages/tms/companies/Companies"))
 const Drivers = React.lazy(()=>import("../pages/tms/driver/Driver"));
 const AddDriver = React.lazy(()=>import("../pages/tms/driver/AddDriver"));
 const UpdateDriver = React.lazy(()=>import("../pages/tms/driver/UpdateDriver"));
-const AddNewCompany = React.lazy(()=>import("../pages/tms/companies/AddNewCompany"))
-const UpdateNewCompany = React.lazy(()=>import("../pages/tms/companies/UpdateNewCompany"))
+const AddNewCompany = React.lazy(()=>import("../pages/tms/companies/AddNewCompany"));
+const UpdateNewCompany = React.lazy(()=>import("../pages/tms/companies/UpdateNewCompany"));
+const VehicleList = React.lazy(()=>import("../pages/tms/Vehicles/Vehicle"));
+const AddVehicle = React.lazy(()=>import("../pages/tms/Vehicles/AddVehicle"));
+const UpdateVehicle = React.lazy(()=>import("../pages/tms/Vehicles/UpdateVehicle"));
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -75,5 +78,18 @@ export const routes = [
   {
     path:"/edit-drivers/:id",
     element:<UpdateDriver/>
+  },
+  {
+    path:"/vehicle-list",
+    element:<VehicleList/>,
+    permission:"vehicle-list"
+  },
+  {
+    path:"/Add-Vehicle",
+    element:<AddVehicle/>
+  },
+  {
+    path:"/update-vehicle/:id",
+    element:<UpdateVehicle/>
   }
 ];

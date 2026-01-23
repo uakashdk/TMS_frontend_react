@@ -78,7 +78,7 @@ const UpdateDriver = () => {
     }
 
     const fd = new FormData();
-    fd.append("entity_type", "USER");
+    fd.append("entity_type", "Driver");
     fd.append("entity_id", id);
     fd.append("document_group", docForm.document_group);
     fd.append("document_type", docForm.document_type);
