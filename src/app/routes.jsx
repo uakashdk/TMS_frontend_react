@@ -15,6 +15,11 @@ const UpdateNewCompany = React.lazy(()=>import("../pages/tms/companies/UpdateNew
 const VehicleList = React.lazy(()=>import("../pages/tms/Vehicles/Vehicle"));
 const AddVehicle = React.lazy(()=>import("../pages/tms/Vehicles/AddVehicle"));
 const UpdateVehicle = React.lazy(()=>import("../pages/tms/Vehicles/UpdateVehicle"));
+const GetcurrentDriverVehicle = React.lazy(()=>import("../pages/tms/VehicleAssignment/getcurrentDriverVehicle"));
+const GetVehicleCurrentDriver = React.lazy(()=>import("../pages/tms/VehicleAssignment/getVehicleCurrentDriver"));
+const VehicleDriverAssign = React.lazy(()=>import("../pages/tms/VehicleAssignment/VehicleDriverAssign"));
+const VehicleDriverAssignmentHistory = React.lazy(()=>import("../pages/tms/VehicleAssignment/vehicleDriverAssignmentHistory"));
+
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -28,68 +33,115 @@ export const routes = [
   {
     path: "/login",
     element: <Login />,
-    public: true, // anyone can access
+    public: true,
+    name: "Login",
   },
   {
     path: "/dashboard",
     element: <Dashboard />,
-    permission: "dashboard", // required permission
+    permission: "dashboard",
+    name: "Dashboard",
+    module: "General",
   },
   {
     path: "/companies",
     element: <Companies />,
-    permission: "companies", // required permission
+    permission: "companies",
+    name: "Companies",
+    module: "Masters",
   },
   {
     path:"/add-new-company",
     element:<AddNewCompany/>,
+    name: "Add Company",
   },
   {
-  path: "/update-company/:companyId",
-  element: <UpdateNewCompany />
-},
+    path: "/update-company/:companyId",
+    element: <UpdateNewCompany />,
+    name: "Update Company",
+  },
   {
     path: "/trips",
     element: <Trips />,
-    permission: "create-trips", // required permission
+    permission: "create-trips",
+    name: "Trips",
+    module: "Operations",
   },
   {
     path:"/user",
     element:<User/>,
-    permission:"user-list"
+    permission:"user-list",
+    name: "Users",
+    module: "Access Control",
   },
-   {
+  {
     path:"/AddUser",
     element:<AddUser/>,
+    name: "Add User",
   },
   {
     path:"/EditUser/:userId",
     element:<EditUser/>,
+    name: "Edit User",
   },
-    {
+  {
     path: "/drivers",
     element: <Drivers />,
-    permission: "drivers-list", // required permission
+    permission: "drivers-list",
+    name: "Drivers",
+    module: "Fleet",
   },
   {
     path:"/add-drivers",
-    element:<AddDriver/>
+    element:<AddDriver/>,
+    name: "Add Driver",
   },
   {
     path:"/edit-drivers/:id",
-    element:<UpdateDriver/>
+    element:<UpdateDriver/>,
+    name: "Update Driver",
   },
   {
     path:"/vehicle-list",
     element:<VehicleList/>,
-    permission:"vehicle-list"
+    permission:"vehicle-list",
+    name: "Vehicles",
+    module: "Fleet",
   },
   {
     path:"/Add-Vehicle",
-    element:<AddVehicle/>
+    element:<AddVehicle/>,
+    name: "Add Vehicle",
   },
   {
     path:"/update-vehicle/:id",
-    element:<UpdateVehicle/>
+    element:<UpdateVehicle/>,
+    name: "Update Vehicle",
+  },
+  {
+    path:"/vehcile-assign",
+    element:<VehicleDriverAssign/>,
+    permission:"vehicle-driver-assignment",
+    name: "Vehicle–Driver Assignment",
+    module: "Fleet Mapping",
+  },
+  {
+    path:"/vehicle-Driver-Assignment-History",
+    element:<VehicleDriverAssignmentHistory/>,
+    permission:"vehicle-Driver-Assignment-History",
+    name: "Assignment History",
+    module: "Fleet Mapping",
+  },
+  {
+    path:"/Get-Vehicle-Current-Driver",
+    element:<GetVehicleCurrentDriver/>,
+    name: "Vehicle Current Driver",
+    hidden: true,
+  },
+  {
+    path:"/Get-current-Driver-Vehicle",
+    element:<GetcurrentDriverVehicle/>,
+    name: "Driver Current Vehicle",
+    hidden: true,
   }
 ];
