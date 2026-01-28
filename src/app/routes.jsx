@@ -19,7 +19,9 @@ const GetcurrentDriverVehicle = React.lazy(()=>import("../pages/tms/VehicleAssig
 const GetVehicleCurrentDriver = React.lazy(()=>import("../pages/tms/VehicleAssignment/getVehicleCurrentDriver"));
 const VehicleDriverAssign = React.lazy(()=>import("../pages/tms/VehicleAssignment/VehicleDriverAssign"));
 const VehicleDriverAssignmentHistory = React.lazy(()=>import("../pages/tms/VehicleAssignment/vehicleDriverAssignmentHistory"));
-
+const EditRoute = React.lazy(()=>import("../pages/tms/RouteMaster/EditRoute"));
+const AddRoute = React.lazy(()=>import("../pages/tms/RouteMaster/AddRoute"));
+const Route = React.lazy(()=>import("../pages/tms/RouteMaster/Route"));
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -143,5 +145,23 @@ export const routes = [
     element:<GetcurrentDriverVehicle/>,
     name: "Driver Current Vehicle",
     hidden: true,
-  }
+  },
+  {
+    path:"/route-master",
+    element:<Route/>,
+    permission:"route-master",
+    name: "Route Master",
+    module: "Fleet",
+  },
+  {
+    path:"/add-route",
+    element:<AddRoute/>,
+    name: "Add Route-master",
+  },
+  {
+    path:"/edit-route/:id",
+    element:<EditRoute/>,
+    name: "Edit Route",
+  },
+
 ];
