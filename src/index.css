@@ -69,3 +69,12 @@
   @apply w-full rounded-md border border-slate-300 px-3 py-2 text-sm
   focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-slate-900;
 }
+
+
+/* REMOVE TABLE HEADER BORDER COMPLETELY */
+.no-header-border thead,
+.no-header-border thead tr,
+.no-header-border thead th {
+  border-bottom: none !important;
+}
+

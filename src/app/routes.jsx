@@ -22,6 +22,9 @@ const VehicleDriverAssignmentHistory = React.lazy(()=>import("../pages/tms/Vehic
 const EditRoute = React.lazy(()=>import("../pages/tms/RouteMaster/EditRoute"));
 const AddRoute = React.lazy(()=>import("../pages/tms/RouteMaster/AddRoute"));
 const Route = React.lazy(()=>import("../pages/tms/RouteMaster/Route"));
+const Party = React.lazy(()=>import("../pages/tms/PartyModule/Party"));
+const AddParty = React.lazy(()=>import("../pages/tms/PartyModule/AddParty"));
+const EditParty = React.lazy(()=>import("../pages/tms/PartyModule/EditParty"));
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -151,7 +154,7 @@ export const routes = [
     element:<Route/>,
     permission:"route-master",
     name: "Route Master",
-    module: "Fleet",
+    module: "Masters",
   },
   {
     path:"/add-route",
@@ -163,5 +166,23 @@ export const routes = [
     element:<EditRoute/>,
     name: "Edit Route",
   },
+
+{
+  path:"/party",
+  element:<Party/>,
+  permission:"party-module",
+  name: "Party",
+  module: "Masters",
+},
+{
+  path:"/add-party",
+  element:<AddParty/>,
+  name: "Add Party",
+},
+{
+  path:"/edit-party/:id",
+  element:<EditParty/>,
+  name: "Edit Party",
+},
 
 ];
