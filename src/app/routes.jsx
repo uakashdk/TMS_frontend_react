@@ -25,6 +25,11 @@ const Route = React.lazy(()=>import("../pages/tms/RouteMaster/Route"));
 const Party = React.lazy(()=>import("../pages/tms/PartyModule/Party"));
 const AddParty = React.lazy(()=>import("../pages/tms/PartyModule/AddParty"));
 const EditParty = React.lazy(()=>import("../pages/tms/PartyModule/EditParty"));
+const JobList = React.lazy(()=>import("../pages/tms/jobs/JobList"));
+const AddJobs = React.lazy(()=>import("../pages/tms/jobs/AddJobs"));
+const UpdateJobs = React.lazy(()=>import("../pages/tms/jobs/UpdateJobs"));
+
+// Route keys for easy reference
 export const routeKeys = {
   LOGIN: "login",
   DASHBOARD: "dashboard",
@@ -183,6 +188,24 @@ export const routes = [
   path:"/edit-party/:id",
   element:<EditParty/>,
   name: "Edit Party",
+},
+
+{
+  path:"/job-list",
+  element:<JobList/>,
+  permission:"job-list",
+  module: "Operations",
+  name: "Job List",
+},
+{
+  path:"/add-jobs",
+  element:<AddJobs/>,
+  name: "Add Jobs",
+},
+{
+  path:"/update-jobs/:id",
+  element:<UpdateJobs/>,
+  name: "Update Jobs",
 },
 
 ];
