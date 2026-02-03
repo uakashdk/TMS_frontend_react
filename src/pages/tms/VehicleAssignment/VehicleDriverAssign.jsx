@@ -128,10 +128,13 @@ const handleVehicleChange = async (option) => {
     label: `${v.vehicle_number} • ${v.vehicle_type}`,
   }));
 
-  const driverOptions = drivers.map((d) => ({
+ const driverOptions = drivers
+  .filter(d => d.driverProfile) // 🔥 only verified drivers
+  .map(d => ({
     value: d.driverProfile.id,
     label: `${d.driverProfile.name} • ${d.driverProfile.driver_license_number}`,
   }));
+
 
   return (
     <div className="min-h-screen bg-slate-50 p-8">
