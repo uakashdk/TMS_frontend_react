@@ -2,7 +2,9 @@ import React from "react";
 
 const Login = React.lazy(()=>import("../pages/tms/auth/Login"))
 const Dashboard = React.lazy(()=>import("../pages/tms/dashboard/DashBoard"))
-const Trips = React.lazy(()=>import("../pages/tms/Trips/Trips"))
+const Trips = React.lazy(()=>import("../pages/tms/Trips/Trips"));
+const AddTrip = React.lazy(()=>import("../pages/tms/Trips/AddTrip"));
+const UpdateTrip = React.lazy(()=>import("../pages/tms/Trips/UpdateTrip"));
 const User = React.lazy(()=>import("../pages/tms/user/UserList"))
 const AddUser = React.lazy(()=>import("../pages/tms/user/AddUser"))
 const EditUser = React.lazy(()=>import("../pages/tms/user/EditUser"))
@@ -70,13 +72,7 @@ export const routes = [
     element: <UpdateNewCompany />,
     name: "Update Company",
   },
-  {
-    path: "/trips",
-    element: <Trips />,
-    permission: "create-trips",
-    name: "Trips",
-    module: "Operations",
-  },
+ 
   {
     path:"/user",
     element:<User/>,
@@ -207,5 +203,22 @@ export const routes = [
   element:<UpdateJobs/>,
   name: "Update Jobs",
 },
+ {
+    path: "/trips",
+    element: <Trips />,
+    permission: "trip-list",
+    name: "Trips",
+    module: "Operations",
+  },
+  {
+    path: "/add-trip",
+    element: <AddTrip />,
+    name: "Add Trip",
+  },
+  {
+    path: "/update-trip/:id",
+    element: <UpdateTrip />,
+    name: "Update Trip",
+  },
 
 ];

@@ -71,6 +71,26 @@
 }
 
 
+.label {
+  @apply block text-[11px] font-medium uppercase tracking-wide text-fleet-text-secondary mb-1;
+}
+
+.input {
+  @apply w-full rounded-md border border-(--color-fleet-border)
+  px-3 py-2 text-sm bg-white
+  text-fleet-text-primary
+  outline-none ring-0
+  focus:outline-none focus:ring-0
+  focus:border-fleet-primary
+  transition;
+}
+
+/* Kill browser date focus */
+input[type="date"]::-webkit-focus-inner {
+  border: 0;
+}
+
+
 /* REMOVE TABLE HEADER BORDER COMPLETELY */
 .no-header-border thead,
 .no-header-border thead tr,

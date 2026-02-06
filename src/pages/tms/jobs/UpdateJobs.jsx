@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 
 import { getJobById, UpdateJob } from "../../../services/jobService/JobService";
 import { getPartyDropdown } from "../../../services/PartyModule/PartyService";
+import { getRouteDropdown } from "../../../services/RouteService/RouteService";
 
 /* -------------------- OPTIONS -------------------- */
 
@@ -64,7 +65,9 @@ const UpdateJobs = () => {
         pickup_location: "",
         dropoff_location: "",
         status: 1, // ✅ default active
+        route_id: null
     });
+    const [routeOptions, setRouteOptions] = useState([]);
 
 
     /* -------------------- FETCH DATA -------------------- */
@@ -72,9 +75,10 @@ const UpdateJobs = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [jobRes, partyRes] = await Promise.all([
+                const [jobRes, partyRes, routeRes] = await Promise.all([
                     getJobById(id),
                     getPartyDropdown(),
+                    getRouteDropdown(),
                 ]);
 
                 const parties =
@@ -85,7 +89,14 @@ const UpdateJobs = () => {
                             label: p.party_name,
                         })) || [];
 
+                const routes = routeRes?.data?.map(r => ({
+                    value: r.id,
+                    label: `${r.source_city} → ${r.destination_city}`,
+                    distance: r.distance_km,
+                }));
+
                 setPartyOptions(parties);
+                setRouteOptions(routes);
 
                 const job = jobRes?.data;
 
@@ -98,6 +109,7 @@ const UpdateJobs = () => {
                     pickup_location: job.pickup_location,
                     dropoff_location: job.dropoff_location,
                     status: job.status ?? 1, // ✅ important
+                    route_id:job.route_id,
                 });
 
             } catch (err) {
@@ -127,6 +139,7 @@ const UpdateJobs = () => {
             pickup_location: formData.pickup_location,
             dropoff_location: formData.dropoff_location,
             status: formData.status, // ✅ added
+            route_id:formData.route_id,
         };
 
         try {
@@ -187,6 +200,81 @@ const UpdateJobs = () => {
                         />
 
                     </div>
+
+                       <div>
+                                             <label className="label">Job</label>
+                                             <Select
+                                                 styles={selectStyles}
+                                                 placeholder="Select job"
+                                                 options={jobs.map(j => ({
+                                                     value: j.id,
+                                                     label: `${j.customer?.party_name} • ${j.pickup_location} → ${j.dropoff_location}`,
+                                                     route: j.route, // 👈 IMPORTANT
+                                                 }))}
+                                                 onChange={(e) => {
+                                                     // set job
+                                                     setForm(prev => ({ ...prev, job_id: e?.value }));
+                     
+                                                     // if job has route → auto select & lock
+                                                     if (e?.route) {
+                                                         const routeOption = {
+                                                             value: e.route.id,
+                                                             label: e.route.route_name,
+                                                         };
+                     
+                                                         setSelectedRoute(routeOption);
+                                                         setIsRouteLocked(true);
+                     
+                                                         setForm(prev => ({
+                                                             ...prev,
+                                                             route_id: e.route.id,
+                                                             route_summary: e.route.route_name,
+                                                         }));
+                     
+                                                         // find distance from routes list
+                                                         const fullRoute = routes.find(r => r.id === e.route.id);
+                                                         if (fullRoute) {
+                                                             setForm(prev => ({
+                                                                 ...prev,
+                                                                 total_distance_km: fullRoute.distance_km,
+                                                             }));
+                                                         }
+                                                     } else {
+                                                         // no route → allow manual selection
+                                                         setSelectedRoute(null);
+                                                         setIsRouteLocked(false);
+                     
+                                                         setForm(prev => ({
+                                                             ...prev,
+                                                             route_id: null,
+                                                             route_summary: "",
+                                                             total_distance_km: "",
+                                                         }));
+                                                     }
+                                                 }}
+                                             />
+                     
+                                         </div>
+                    {/* Route */}
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Route
+                        </label>
+
+                        <Select
+                            options={routeOptions}
+                            value={routeOptions.find(
+                                opt => opt.value === formData.route_id
+                            )}
+                            onChange={(val) =>
+                                handleChange("route_id", val?.value)
+                            }
+                            placeholder="Select route"
+                            className="mt-1 text-sm"
+                            styles={reactSelectStyle}
+                        />
+                    </div>
+
 
                     {/* JOB DATE */}
                     <div>

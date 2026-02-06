@@ -1,7 +1,7 @@
 import api from "../axios";
 import toast from "react-hot-toast";
 
-export const getAllVehicle = async ({ page = 1, search = "" }) => {
+export const getAllVehicle = async ({ page = 1, search = "" } = {}) => {
   try {
     const token = localStorage.getItem("accessToken");
 
@@ -22,6 +22,7 @@ export const getAllVehicle = async ({ page = 1, search = "" }) => {
     throw error;
   }
 };
+
 
 
 export const createVehicle = async(payload)=>{

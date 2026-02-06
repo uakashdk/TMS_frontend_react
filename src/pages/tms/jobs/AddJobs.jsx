@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { AddJob } from "../../../services/jobService/JobService";
 import { getPartyDropdown } from "../../../services/PartyModule/PartyService";
-
+import { getRouteDropdown } from "../../../services/RouteService/RouteService";
 const unitOptions = [
     { value: "LTR", label: "Liters (LTR)" },
     { value: "KG", label: "Kilograms (KG)" },
@@ -43,29 +43,35 @@ const AddJobs = () => {
         quantity_units: unitOptions[0],
         pickup_location: "",
         dropoff_location: "",
+        route_id: null,
     });
     const [partyOptions, setPartyOptions] = useState([]);
+    const [routeOptions, setRouteOptions] = useState([]);
 
 
     useEffect(() => {
-        const fetchParties = async () => {
-            const res = await getPartyDropdown();
+        const fetchInitialData = async () => {
+            const partyRes = await getPartyDropdown();
+            const routeRes = await getRouteDropdown();
 
-            const options = res?.data
-                ?.filter((party) => party.party_type === "client")
-                .map((party) => ({
-                    value: party.party_id,   // ✅ send party_id
-                    label: party.party_name,
+            const parties = partyRes?.data
+                ?.filter(p => p.party_type === "client")
+                .map(p => ({
+                    value: p.party_id,
+                    label: p.party_name,
                 }));
 
-            setPartyOptions(options || []);
+            const routes = routeRes?.data?.map(r => ({
+                value: r.id,
+                label: `${r.source_city} → ${r.destination_city}`,
+                distance: r.distance_km,
+            }));
 
-
-
-            setPartyOptions(options || []);
+            setPartyOptions(parties || []);
+            setRouteOptions(routes || []);
         };
 
-        fetchParties();
+        fetchInitialData();
     }, []);
 
 
@@ -84,7 +90,9 @@ const AddJobs = () => {
             quantity_units: formData.quantity_units?.value,
             pickup_location: formData.pickup_location,
             dropoff_location: formData.dropoff_location,
+            route_id: formData.route_id, // ✅ REQUIRED
         };
+
 
         try {
             await AddJob(payload);
@@ -131,6 +139,27 @@ const AddJobs = () => {
                         />
 
                     </div>
+
+                    {/* Route */}
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Route
+                        </label>
+
+                        <Select
+                            options={routeOptions}
+                            value={routeOptions.find(
+                                opt => opt.value === formData.route_id
+                            )}
+                            onChange={(val) =>
+                                handleChange("route_id", val?.value)
+                            }
+                            placeholder="Select route"
+                            className="mt-1 text-sm"
+                            styles={reactSelectStyle}
+                        />
+                    </div>
+
 
 
                     {/* Job Date */}

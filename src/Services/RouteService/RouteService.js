@@ -58,3 +58,15 @@ export const deleteRoute = async (routeId) => {
     throw error;
   }
 };
+
+
+export const getRouteDropdown = async () => {
+  try {
+    const response = await api.get("/routes/get-route-dropdown");
+    return response.data;
+  }
+    catch (error) {
+    toast.error(error.response?.data?.message || "Failed to fetch route dropdown");
+    throw error;
+  }
+};

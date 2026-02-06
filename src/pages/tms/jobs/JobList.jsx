@@ -54,7 +54,6 @@ const JobList = () => {
                         Manage customer jobs and related trips
                     </p>
                 </div> 
-                 {console.log("roles=======>",roles)}
 
                 {["operational-manager", "support-manager"].includes(roles) && (
                     <button
