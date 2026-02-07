@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Eye, Pencil, Search } from "lucide-react";
 import Select from "react-select";
 
-import { DocumentUsers } from "../../../services/document/documentService";
+import { DocumentUsers } from "../../../services/document/DocumentService";
 import {
   getAllVehicle,
   getVehicleDetailById,

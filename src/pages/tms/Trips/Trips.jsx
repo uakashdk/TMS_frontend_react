@@ -5,9 +5,9 @@ import { getJobDropdown } from "../../../services/jobService/JobService";
 import { getAllDriver } from "../../../services/driverService/driverService";
 import { getAllVehicle } from "../../../services/VehicleService/VehicleService";
 import { getRouteDropdown } from "../../../services/RouteService/RouteService";
-import { Eye, Pencil } from "lucide-react";
+import { Eye, Pencil, IndianRupee, Receipt } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Trips = () => {
@@ -38,6 +38,8 @@ const Trips = () => {
     totalPages: 1,
   });
 
+  const { user } = useSelector((state) => state.auth);
+  const roles = user?.role;
 
   const navigate = useNavigate();
 
@@ -66,15 +68,17 @@ const Trips = () => {
 
 
   useEffect(() => {
-    Promise.all([
-      getJobDropdown(),
-      getAllDriver(),
-      getAllVehicle({ page: 1 }),
-    ]).then(([jobRes, driverRes, vehicleRes]) => {
-      setJobs(jobRes?.data || []);
-      setDrivers(driverRes?.data || []);
-      setVehicles(vehicleRes?.data || []);
-    });
+    if (roles === 'operational-manager' || roles === 'Company-Admin') {
+      Promise.all([
+        getJobDropdown(),
+        getAllDriver(),
+        getAllVehicle({ page: 1 }),
+      ]).then(([jobRes, driverRes, vehicleRes]) => {
+        setJobs(jobRes?.data || []);
+        setDrivers(driverRes?.data || []);
+        setVehicles(vehicleRes?.data || []);
+      });
+    }
   }, []);
 
   const getRouteName = (routeId) => {
@@ -243,133 +247,136 @@ const Trips = () => {
             Monitor, track and manage fleet trips
           </p>
         </div>
-
-        <button
-          onClick={() => navigate("/add-trip")}
-          className="bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)">
-          + Add Trip
-        </button>
+        {(roles === "operational-manager" || roles === "Company-Admin") && (
+          <button
+            onClick={() => navigate("/add-trip")}
+            className="bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)">
+            + Add Trip
+          </button>
+        )}
       </div>
 
       {/* ================= SEARCH PANEL ================= */}
-      <div className="bg-fleet-card rounded-xl border border-(--color-fleet-border) shadow-sm">
+      {(roles === "operational-manager" || roles === "Company-Admin") && (
+        <div className="bg-fleet-card rounded-xl border border-(--color-fleet-border) shadow-sm">
 
-        <div className="p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="p-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-          {/* Job */}
-          <div>
-            <label className="label">Job</label>
-            <Select
-              styles={selectStyles}
-              placeholder="Select job"
-              value={
-                selectedJob
-                  ? {
-                    value: selectedJob.id,
-                    label: `${selectedJob.customer?.party_name} • ${selectedJob.pickup_location} → ${selectedJob.dropoff_location}`,
-                  }
-                  : null
-              }
-              options={jobs.map(j => ({
-                value: j.id,
-                label: `${j.customer?.party_name} • ${j.pickup_location} → ${j.dropoff_location}`,
-              }))}
-              onChange={(e) =>
-                setFilters({ ...filters, job_id: e?.value, page: 1 })
-              }
-            />
+            {/* Job */}
+            <div>
+              <label className="label">Job</label>
+              <Select
+                styles={selectStyles}
+                placeholder="Select job"
+                value={
+                  selectedJob
+                    ? {
+                      value: selectedJob.id,
+                      label: `${selectedJob.customer?.party_name} • ${selectedJob.pickup_location} → ${selectedJob.dropoff_location}`,
+                    }
+                    : null
+                }
+                options={jobs.map(j => ({
+                  value: j.id,
+                  label: `${j.customer?.party_name} • ${j.pickup_location} → ${j.dropoff_location}`,
+                }))}
+                onChange={(e) =>
+                  setFilters({ ...filters, job_id: e?.value, page: 1 })
+                }
+              />
 
-          </div>
+            </div>
 
-          {/* Driver */}
-          <div>
-            <label className="label">Driver</label>
-            <Select
-              styles={selectStyles}
-              placeholder="Select driver"
-              options={drivers.map(d => ({
-                value: d.driverProfile?.id,
-                label: d.driverProfile?.name,
-              }))}
-              onChange={(e) => setFilters({ ...filters, driver_id: e?.value })}
-            />
-          </div>
+            {/* Driver */}
+            <div>
+              <label className="label">Driver</label>
+              <Select
+                styles={selectStyles}
+                placeholder="Select driver"
+                options={drivers.map(d => ({
+                  value: d.driverProfile?.id,
+                  label: d.driverProfile?.name,
+                }))}
+                onChange={(e) => setFilters({ ...filters, driver_id: e?.value })}
+              />
+            </div>
 
-          {/* Vehicle */}
-          <div>
-            <label className="label">Vehicle</label>
-            <Select
-              styles={selectStyles}
-              placeholder="Select vehicle"
-              options={vehicles.map(v => ({
-                value: v.id,
-                label: v.vehicle_number,
-              }))}
-              onChange={(e) => setFilters({ ...filters, vehicle_id: e?.value })}
-            />
-          </div>
+            {/* Vehicle */}
+            <div>
+              <label className="label">Vehicle</label>
+              <Select
+                styles={selectStyles}
+                placeholder="Select vehicle"
+                options={vehicles.map(v => ({
+                  value: v.id,
+                  label: v.vehicle_number,
+                }))}
+                onChange={(e) => setFilters({ ...filters, vehicle_id: e?.value })}
+              />
+            </div>
 
-          {/* Status */}
-          <div>
-            <label className="label">Trip Status</label>
-            <select
-              className="input"
-              onChange={(e) =>
-                setFilters({ ...filters, trip_status: e.target.value })
-              }
-            >
-              <option value="">All</option>
-              <option value="PLANNED">Planned</option>
-              <option value="STARTED">Started</option>
-              <option value="COMPLETED">Completed</option>
-            </select>
-          </div>
+            {/* Status */}
+            <div>
+              <label className="label">Trip Status</label>
+              <select
+                className="input"
+                onChange={(e) =>
+                  setFilters({ ...filters, trip_status: e.target.value })
+                }
+              >
+                <option value="">All</option>
+                <option value="PLANNED">Planned</option>
+                <option value="STARTED">Started</option>
+                <option value="COMPLETED">Completed</option>
+              </select>
+            </div>
 
-          {/* Start Date */}
-          <div>
-            <label className="label">Start Date</label>
-            <input
-              type="date"
-              className="input"
-              onChange={(e) =>
-                setFilters({ ...filters, start_date: e.target.value })
-              }
-            />
-          </div>
+            {/* Start Date */}
+            <div>
+              <label className="label">Start Date</label>
+              <input
+                type="date"
+                className="input"
+                onChange={(e) =>
+                  setFilters({ ...filters, start_date: e.target.value })
+                }
+              />
+            </div>
 
-          {/* End Date */}
-          <div>
-            <label className="label">End Date</label>
-            <input
-              type="date"
-              className="input"
-              onChange={(e) =>
-                setFilters({ ...filters, end_date: e.target.value })
-              }
-            />
-          </div>
+            {/* End Date */}
+            <div>
+              <label className="label">End Date</label>
+              <input
+                type="date"
+                className="input"
+                onChange={(e) =>
+                  setFilters({ ...filters, end_date: e.target.value })
+                }
+              />
+            </div>
 
-          {/* Search */}
-          <div className="md:col-span-2">
-            <label className="label">Search</label>
-            <input
-              type="text"
-              placeholder="Search by route, driver or vehicle"
-              className="input"
-              onChange={(e) =>
-                setFilters({ ...filters, search: e.target.value })
-              }
-            />
-          </div>
+            {/* Search */}
+            <div className="md:col-span-2">
+              <label className="label">Search</label>
+              <input
+                type="text"
+                placeholder="Search by route, driver or vehicle"
+                className="input"
+                onChange={(e) =>
+                  setFilters({ ...filters, search: e.target.value })
+                }
+              />
+            </div>
 
-          {/* Apply */}
-          <div className="flex items-end">
-            <button className="w-full bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)">
-              Apply Filters
-            </button>
+            {/* Apply */}
+            <div className="flex items-end">
+              <button className="w-full bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)">
+                Apply Filters
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* ================= TABLE ================= */}
       <div className="bg-fleet-card rounded-xl shadow-sm overflow-hidden">
@@ -444,26 +451,63 @@ const Trips = () => {
                     </span>
                   </td>
 
-
                   <td className="px-5 py-4 text-right">
                     <div className="inline-flex gap-2">
-                      <button
-                        onClick={() => {
-                          setOpenTrip(trip);
-                          setNewStatus(trip.trip_status);
-                        }}
-                        className="p-2 rounded-md hover:bg-blue-50 text-slate-500 hover:text-blue-600"
-                      >
-                        <Eye size={16} />
-                      </button>
 
-                      <button
-                        onClick={() => navigate(`/update-trip/${trip.id}`)}
-                        className="p-2 rounded-md hover:bg-green-50 text-slate-500 hover:text-green-600">
-                        <Pencil size={16} />
-                      </button>
+                      {/* View Trip */}
+                      {(roles === "operational-manager" || roles === "Company-Admin") && (
+                        <button
+                          onClick={() => {
+                            setOpenTrip(trip);
+                            setNewStatus(trip.trip_status);
+                          }}
+                          className="p-2 rounded-md hover:bg-blue-50 text-slate-500 hover:text-blue-600"
+                          title="View Trip"
+                        >
+                          <Eye size={16} />
+                        </button>
+                      )}
+
+                      {/* Trip Advance */}
+                      {(roles === "Accounts-manager" || roles === "Company-Admin" || roles === "driver") && (
+                        <>
+                          <button
+                            onClick={() => navigate(`/add-trip-advance/${trip.id}`)}
+                            className="p-2 rounded-md hover:bg-amber-50 text-slate-500 hover:text-amber-600"
+                            title="Trip Advance"
+                          >
+                            <IndianRupee size={16} />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/trip-expence/${trip.id}`)}
+                            className="p-2 rounded-md hover:bg-purple-50 text-slate-500 hover:text-purple-600"
+                            title="Trip Expense"
+                          >
+                            <Receipt size={16} />
+                          </button>
+                        </>
+                      )}
+
+                      {/* Trip Expense */}
+
+
+                      {/* Edit Trip */}
+
+                      {(roles === "operational-manager" || roles === "Company-Admin") && (
+                        <button
+                          onClick={() => navigate(`/update-trip/${trip.id}`)}
+                          className="p-2 rounded-md hover:bg-green-50 text-slate-500 hover:text-green-600"
+                          title="Edit Trip"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                      )}
+
+
                     </div>
                   </td>
+
+
                 </tr>
               ))
             )}

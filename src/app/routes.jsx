@@ -30,6 +30,8 @@ const EditParty = React.lazy(()=>import("../pages/tms/PartyModule/EditParty"));
 const JobList = React.lazy(()=>import("../pages/tms/jobs/JobList"));
 const AddJobs = React.lazy(()=>import("../pages/tms/jobs/AddJobs"));
 const UpdateJobs = React.lazy(()=>import("../pages/tms/jobs/UpdateJobs"));
+const AddTripAdvance = React.lazy(()=>import("../pages/tms/Trips/TripAdvance"));
+const TripExpence = React.lazy(()=>import("../pages/tms/Trips/TripExpence"));
 
 // Route keys for easy reference
 export const routeKeys = {
@@ -220,5 +222,17 @@ export const routes = [
     element: <UpdateTrip />,
     name: "Update Trip",
   },
+
+  {
+    path:"/add-trip-advance/:id",
+    element:<AddTripAdvance/>,
+    name:"Trip Advance",
+  },
+
+  {
+    path:"/trip-expence/:id",
+    element:<TripExpence/>,
+    name:"Trip Expence"
+  }
 
 ];

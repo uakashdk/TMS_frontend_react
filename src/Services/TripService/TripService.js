@@ -1,3 +1,4 @@
+
 import api from "../axios";
 import toast from "react-hot-toast";
 
@@ -62,3 +63,62 @@ export const changeTripStatus = async (id, statusBody)=>{
         toast.error(error?.response?.message || "Internal Server error please try after some times")
     }
 }
+
+
+export const AddTripAdvance = async (TripAdvanceData) => {
+  try {
+    const response = await api.post(
+      "/trips/create-trip-advance",
+      TripAdvanceData
+    );
+    return response?.data; // 👈 return full object
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message || "Error while saving trip advance"
+    );
+    return null;
+  }
+};
+
+
+export const getTripAdvance = async (tripId) => {
+  try {
+    const response = await api.get(`/trips/get-trip-advanceById/${tripId}`);
+    return response?.data;
+  } catch (error) {
+    toast.error(
+      error?.response?.data?.message ||
+      "Internal server error while fetching trip advance"
+    );
+  }
+};
+
+
+export const getTripExpense = async (tripId) => {
+    try {
+        const response = await api.get(`/trips/get-trip-expenses/${tripId}`);
+        return response.data;
+    } catch (error) {
+        toast.error(
+            error?.response?.data?.message || "Failed to fetch trip expenses"
+        );
+        throw error; // important if caller needs to handle it
+    }
+};
+
+export const addTripExpense = async (tripExpenseData) => {
+    try {
+        const response = await api.post(
+            "/trips/create-trip-expense",
+            tripExpenseData
+        );
+        return response.data;
+    } catch (error) {
+        toast.error(
+            error?.response?.data?.message || "Internal server error"
+        );
+        throw error;
+    }
+};
+
+
