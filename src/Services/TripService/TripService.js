@@ -121,4 +121,23 @@ export const addTripExpense = async (tripExpenseData) => {
     }
 };
 
+export const AddPod = async(podData)=>{
+  try {
+    const response = api.post("/trips/create-pod",podData);
+    return response?.data;
+  } catch (error) {
+    toast.error(error?.response?.data?.message || "Internal server error please try after some time");
+    throw error;
+  }
+}
+
+export const getPodAll = async(PODID)=>{
+  try {
+    const response = api.get(`/trips/get-pod-by-id/${PODID}`);
+    return response?.data;
+  } catch (error) {
+      toast.error(error?.response?.data?.message || "error")
+  }
+}
+
 

@@ -5,7 +5,7 @@ import { getJobDropdown } from "../../../services/jobService/JobService";
 import { getAllDriver } from "../../../services/driverService/driverService";
 import { getAllVehicle } from "../../../services/VehicleService/VehicleService";
 import { getRouteDropdown } from "../../../services/RouteService/RouteService";
-import { Eye, Pencil, IndianRupee, Receipt } from "lucide-react";
+import { Eye, Pencil, IndianRupee, Receipt, FileCheck } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -467,6 +467,14 @@ const Trips = () => {
                           <Eye size={16} />
                         </button>
                       )}
+                      <button
+                        onClick={() => navigate(`/pod/${trip.id}`)}
+                        className="p-2 rounded-md hover:bg-emerald-50 text-slate-500 hover:text-emerald-600"
+                        title="POD"
+                      >
+                        <FileCheck size={16} />
+                      </button>
+
 
                       {/* Trip Advance */}
                       {(roles === "Accounts-manager" || roles === "Company-Admin" || roles === "driver") && (

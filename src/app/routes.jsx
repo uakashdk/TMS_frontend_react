@@ -32,6 +32,7 @@ const AddJobs = React.lazy(()=>import("../pages/tms/jobs/AddJobs"));
 const UpdateJobs = React.lazy(()=>import("../pages/tms/jobs/UpdateJobs"));
 const AddTripAdvance = React.lazy(()=>import("../pages/tms/Trips/TripAdvance"));
 const TripExpence = React.lazy(()=>import("../pages/tms/Trips/TripExpence"));
+const POD = React.lazy(()=>import("../pages/tms/POD/Pod"));
 
 // Route keys for easy reference
 export const routeKeys = {
@@ -233,6 +234,12 @@ export const routes = [
     path:"/trip-expence/:id",
     element:<TripExpence/>,
     name:"Trip Expence"
+  },
+
+  {
+    path:"/pod/:tripId",
+    element:<POD/>,
+    name:"POD"
   }
 
 ];
