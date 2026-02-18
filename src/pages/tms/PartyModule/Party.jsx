@@ -5,6 +5,8 @@ import { getAllParties } from "../../../services/PartyModule/PartyService";
 import PartyGSTSidebar from "../../../component/common/PartyGstSidebar";
 import ReactPaginate from "react-paginate";
 
+import PermissionGate from "../../../app/PermissionGate";
+
 
 const Party = () => {
     const navigate = useNavigate();
@@ -45,7 +47,7 @@ const Party = () => {
                 <h1 className="text-xl font-semibold text-fleet-text-primary">
                     Parties
                 </h1>
-
+                <PermissionGate permission="create_party">
                 <button
                     onClick={() => navigate("/add-party")}
                     className="flex items-center gap-2 bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)"
@@ -53,6 +55,7 @@ const Party = () => {
                     <Plus size={16} />
                     Add Party
                 </button>
+                </PermissionGate>
             </div>
 
             {/* ================= SEARCH ================= */}
@@ -139,6 +142,7 @@ const Party = () => {
 
                                     <td className="px-4 py-3">
                                         <div className="flex justify-center gap-3">
+                                            <PermissionGate permissions={["view_party_gst", "view_party_address"]}>
                                             <button
                                                 onClick={() => {
                                                     setSelectedParty(party);
@@ -148,7 +152,8 @@ const Party = () => {
                                             >
                                                 <Eye size={16} />
                                             </button>
-
+                                           </PermissionGate>
+                                           <PermissionGate permission="update_party">
                                             <button
                                                 onClick={() =>
                                                     navigate(
@@ -159,6 +164,7 @@ const Party = () => {
                                             >
                                                 <Pencil size={16} />
                                             </button>
+                                            </PermissionGate>
                                         </div>
                                     </td>
                                 </tr>

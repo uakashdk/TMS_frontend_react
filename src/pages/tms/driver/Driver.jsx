@@ -22,7 +22,12 @@ const Driver = () => {
 
 
   const { user } = useSelector((state) => state.auth);
-  const userRole = user?.role;
+
+  const permission = user.permissions || [];
+  const hasPermission = (perm) => permission.includes(perm);
+
+
+
   const navigate = useNavigate();
 
   const statusOptions = [
@@ -102,7 +107,7 @@ const Driver = () => {
           Drivers
         </h1>
 
-        {userRole === "operational-manager" && (
+        {hasPermission("create_driver") && (
           <button
             onClick={() => navigate("/add-drivers")}
             className="px-4 py-2 rounded-md bg-fleet-primary text-white text-sm hover:bg-(--color-fleet-primary-dark)"
@@ -196,7 +201,7 @@ const Driver = () => {
                 <td className="px-6 py-4">
                   <div className="flex justify-end gap-2">
 
-                    {userRole === "operational-manager" && (
+                    {hasPermission("update_driver") && (
                       <button
                         title="Edit Driver"
                         onClick={() => navigate(`/edit-drivers/${driver?.id}`)}

@@ -9,6 +9,7 @@ import { Eye, Pencil, IndianRupee, Receipt, FileCheck } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PermissionGate from "../../../app/PermissionGate";
 
 const Trips = () => {
   const [filters, setFilters] = useState({
@@ -247,13 +248,13 @@ const Trips = () => {
             Monitor, track and manage fleet trips
           </p>
         </div>
-        {(roles === "operational-manager" || roles === "Company-Admin") && (
+          <PermissionGate permission="create_trip">
           <button
             onClick={() => navigate("/add-trip")}
             className="bg-fleet-primary text-white px-4 py-2 rounded-md text-sm hover:bg-(--color-fleet-primary-dark)">
             + Add Trip
           </button>
-        )}
+       </PermissionGate>
       </div>
 
       {/* ================= SEARCH PANEL ================= */}
@@ -455,7 +456,7 @@ const Trips = () => {
                     <div className="inline-flex gap-2">
 
                       {/* View Trip */}
-                      {(roles === "operational-manager" || roles === "Company-Admin") && (
+                     <PermissionGate permission="change_trip_status">
                         <button
                           onClick={() => {
                             setOpenTrip(trip);
@@ -466,7 +467,8 @@ const Trips = () => {
                         >
                           <Eye size={16} />
                         </button>
-                      )}
+                      </PermissionGate>
+                          <PermissionGate permission="view_trip_pod">
                       <button
                         onClick={() => navigate(`/pod/${trip.id}`)}
                         className="p-2 rounded-md hover:bg-emerald-50 text-slate-500 hover:text-emerald-600"
@@ -474,11 +476,12 @@ const Trips = () => {
                       >
                         <FileCheck size={16} />
                       </button>
-
+                      </PermissionGate>
 
                       {/* Trip Advance */}
-                      {(roles === "Accounts-manager" || roles === "Company-Admin" || roles === "driver") && (
-                        <>
+                      
+                      
+                        <PermissionGate permission="create_trip_expense">
                           <button
                             onClick={() => navigate(`/add-trip-advance/${trip.id}`)}
                             className="p-2 rounded-md hover:bg-amber-50 text-slate-500 hover:text-amber-600"
@@ -486,6 +489,8 @@ const Trips = () => {
                           >
                             <IndianRupee size={16} />
                           </button>
+                          </PermissionGate>
+                          <PermissionGate permission="view_trip_advance">
                           <button
                             onClick={() => navigate(`/trip-expence/${trip.id}`)}
                             className="p-2 rounded-md hover:bg-purple-50 text-slate-500 hover:text-purple-600"
@@ -493,15 +498,16 @@ const Trips = () => {
                           >
                             <Receipt size={16} />
                           </button>
-                        </>
-                      )}
+                          </PermissionGate>
+                    
+
 
                       {/* Trip Expense */}
 
 
                       {/* Edit Trip */}
 
-                      {(roles === "operational-manager" || roles === "Company-Admin") && (
+                     <PermissionGate permission="update_trip">
                         <button
                           onClick={() => navigate(`/update-trip/${trip.id}`)}
                           className="p-2 rounded-md hover:bg-green-50 text-slate-500 hover:text-green-600"
@@ -509,7 +515,7 @@ const Trips = () => {
                         >
                           <Pencil size={16} />
                         </button>
-                      )}
+                     </PermissionGate>
 
 
                     </div>

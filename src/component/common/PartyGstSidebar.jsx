@@ -1,5 +1,6 @@
 import React from "react";
 import { X } from "lucide-react";
+import PermissionGate from "../../app/PermissionGate";
 
 const PartyGSTSidebar = ({ party, onClose }) => {
   if (!party) return null;
@@ -32,7 +33,9 @@ const PartyGSTSidebar = ({ party, onClose }) => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           {/* ===== GST SECTION ===== */}
-          <div>
+         <PermissionGate permission="view_party_gst">
+
+           <div>
             <h3 className="text-sm font-semibold text-slate-700 mb-2">
               GST Details
             </h3>
@@ -64,8 +67,10 @@ const PartyGSTSidebar = ({ party, onClose }) => {
               </p>
             )}
           </div>
+         </PermissionGate>
 
           {/* ===== ADDRESS SECTION ===== */}
+            <PermissionGate permission="view_party_address">
           <div>
             <h3 className="text-sm font-semibold text-slate-700 mb-2">
               Addresses
@@ -102,9 +107,11 @@ const PartyGSTSidebar = ({ party, onClose }) => {
               </p>
             )}
           </div>
+          </PermissionGate>
         </div>
       </div>
     </div>
+    
   );
 };
 

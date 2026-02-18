@@ -44,6 +44,7 @@ const AddJobs = () => {
         pickup_location: "",
         dropoff_location: "",
         route_id: null,
+        is_party_advance_required: false,
     });
     const [partyOptions, setPartyOptions] = useState([]);
     const [routeOptions, setRouteOptions] = useState([]);
@@ -91,6 +92,7 @@ const AddJobs = () => {
             pickup_location: formData.pickup_location,
             dropoff_location: formData.dropoff_location,
             route_id: formData.route_id, // ✅ REQUIRED
+            is_party_advance_required: formData.is_party_advance_required,
         };
 
 
@@ -140,6 +142,42 @@ const AddJobs = () => {
 
                     </div>
 
+                    {/* Party Advance Required */}
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Is Party Advance Required?
+                        </label>
+
+                        <div className="flex items-center gap-6 mt-2">
+                            <label className="flex items-center gap-2 text-sm">
+                                <input
+                                    type="radio"
+                                    name="is_party_advance_required"
+                                    value="true"
+                                    checked={formData.is_party_advance_required === true}
+                                    onChange={() =>
+                                        handleChange("is_party_advance_required", true)
+                                    }
+                                />
+                                Yes
+                            </label>
+
+                            <label className="flex items-center gap-2 text-sm">
+                                <input
+                                    type="radio"
+                                    name="is_party_advance_required"
+                                    value="false"
+                                    checked={formData.is_party_advance_required === false}
+                                    onChange={() =>
+                                        handleChange("is_party_advance_required", false)
+                                    }
+                                />
+                                No
+                            </label>
+                        </div>
+                    </div>
+
+
                     {/* Route */}
                     <div>
                         <label className="text-xs font-medium text-gray-500">
@@ -159,8 +197,6 @@ const AddJobs = () => {
                             styles={reactSelectStyle}
                         />
                     </div>
-
-
 
                     {/* Job Date */}
                     <div>

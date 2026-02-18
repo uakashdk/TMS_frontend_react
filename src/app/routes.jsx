@@ -54,7 +54,7 @@ export const routes = [
   {
     path: "/dashboard",
     element: <Dashboard />,
-    permission: "dashboard",
+    permission: "view_dashboard",
     name: "Dashboard",
     module: "General",
   },
@@ -79,7 +79,7 @@ export const routes = [
   {
     path:"/user",
     element:<User/>,
-    permission:"user-list",
+    permission:"view_user",
     name: "Users",
     module: "Access Control",
   },
@@ -96,7 +96,7 @@ export const routes = [
   {
     path: "/drivers",
     element: <Drivers />,
-    permission: "drivers-list",
+    permission: "view_driver",
     name: "Drivers",
     module: "Fleet",
   },
@@ -113,7 +113,7 @@ export const routes = [
   {
     path:"/vehicle-list",
     element:<VehicleList/>,
-    permission:"vehicle-list",
+    permission:"view_vehicle",
     name: "Vehicles",
     module: "Fleet",
   },
@@ -130,14 +130,14 @@ export const routes = [
   {
     path:"/vehcile-assign",
     element:<VehicleDriverAssign/>,
-    permission:"vehicle-driver-assignment",
+    permission:"assign_driver_to_vehicle",
     name: "Vehicle–Driver Assignment",
     module: "Fleet Mapping",
   },
   {
     path:"/vehicle-Driver-Assignment-History",
     element:<VehicleDriverAssignmentHistory/>,
-    permission:"vehicle-Driver-Assignment-History",
+    permission:"view_vehicle_driver_assignment_history",
     name: "Assignment History",
     module: "Fleet Mapping",
   },
@@ -156,7 +156,7 @@ export const routes = [
   {
     path:"/route-master",
     element:<Route/>,
-    permission:"route-master",
+    permission:"view_route",
     name: "Route Master",
     module: "Masters",
   },
@@ -174,7 +174,7 @@ export const routes = [
 {
   path:"/party",
   element:<Party/>,
-  permission:"party-module",
+  permission:"view_party",
   name: "Party",
   module: "Masters",
 },
@@ -192,7 +192,7 @@ export const routes = [
 {
   path:"/job-list",
   element:<JobList/>,
-  permission:"job-list",
+  permission:"view_job",
   module: "Operations",
   name: "Job List",
 },
@@ -209,7 +209,7 @@ export const routes = [
  {
     path: "/trips",
     element: <Trips />,
-    permission: "trip-list",
+    permission: "view_trip",
     name: "Trips",
     module: "Operations",
   },

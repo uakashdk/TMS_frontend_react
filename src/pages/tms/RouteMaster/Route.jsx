@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Pencil, Search, Plus } from "lucide-react";
 import { getAllRoutes } from "../../../services/RouteService/RouteService";
 import { useSelector } from "react-redux";
+import PermissionGate from "../../../app/PermissionGate";
 const Route = () => {
     const navigate = useNavigate();
 
@@ -42,7 +43,7 @@ const Route = () => {
                     Route Master
                 </h1>
 
-                {(roles === "Company-Admin" || roles === "operational-manager") && (
+                <PermissionGate permission="create_route">
                     <button
                         onClick={() => navigate("/add-route")}
                         className="flex items-center gap-2 rounded-md bg-fleet-primary px-4 py-2 text-sm font-medium text-white hover:bg-(--color-fleet-primary-dark)"
@@ -50,7 +51,7 @@ const Route = () => {
                         <Plus size={16} />
                         Add Route
                     </button>
-                )}
+               </PermissionGate>
 
             </div>
 
@@ -128,7 +129,7 @@ const Route = () => {
                                             </span>
                                         </td>
                                         <td className="px-4 py-3 text-center">
-                                        {(roles === "Company-Admin" || roles === "operational-manager") && (
+                                        <PermissionGate permission="update_route">
                                             <button
                                                 onClick={() => navigate(`/edit-route/${route.id}`)}
                                                 className="text-fleet-primary hover:text-(--color-fleet-primary-dark)"
@@ -136,7 +137,7 @@ const Route = () => {
                                             >
                                                 <Pencil size={16} />
                                             </button>
-                                        )}
+                                        </PermissionGate>
                                         </td>
                                     </tr>
                                 ))

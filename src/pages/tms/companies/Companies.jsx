@@ -9,7 +9,9 @@ import {
   DeleteCompany,
 } from "../../../services/companiesService/companiesService";
 
-import { DocumentStatus } from "../../../services/document/DocumentService.js"
+import { DocumentStatus } from "../../../services/document/DocumentService.js";
+
+import PermissionGate from "../../../app/PermissionGate.jsx";
 
 const Companies = () => {
   const [companies, setCompanies] = useState([]);
@@ -26,6 +28,8 @@ const Companies = () => {
 
   const { user } = useSelector((state) => state.auth);
   const roles = user?.role;
+    const permission = user.permissions || [];
+  const hasPermission = (perm) => permission.includes(perm);
 
   const navigate = useNavigate();
 
@@ -41,7 +45,7 @@ const Companies = () => {
     let response;
     if (roles === "super-admin") {
       response = await getAllCompanies();
-    } else if (roles === "Company-Admin") {
+    } else if (hasPermission("view_company") ) {
       response = await getMyCompanies();
     }
 
@@ -110,14 +114,14 @@ const Companies = () => {
             </p>
           </div>
 
-          {roles === "super-admin" && (
+       <PermissionGate permission="create-company">
             <button
               onClick={() => navigate("/add-new-company")}
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               Add Company
             </button>
-          )}
+          </PermissionGate>
         </div>
 
         {/* TABLE */}
@@ -166,7 +170,7 @@ const Companies = () => {
                       {company.status}
                     </td>
                     <td className="px-6 py-4 flex gap-2">
-                      {roles === "super-admin" && (
+                     <PermissionGate permission="verify_company_document">
                         <button
                           onClick={() => {
                             setSelectedCompanyId(company.id);
@@ -177,7 +181,7 @@ const Companies = () => {
                         >
                           👁
                         </button>
-                      )}
+                   </PermissionGate>
 
                       <button
                         onClick={() =>
@@ -187,7 +191,7 @@ const Companies = () => {
                       >
                         ✏
                       </button>
-                         {roles === "super-admin" && (
+                        <PermissionGate permission="delete_company">
                       <button
                         onClick={() => {
                           setSelectedCompanyId(company.id);
@@ -197,7 +201,7 @@ const Companies = () => {
                       >
                         🗑 Delete Company
                       </button>
-                      )} 
+                    </PermissionGate>
 
 
                     </td>

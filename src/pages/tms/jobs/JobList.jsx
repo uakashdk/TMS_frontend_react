@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import PermissionGate from "../../../app/PermissionGate";
 
 const JobList = () => {
     const navigate = useNavigate();
@@ -55,7 +56,7 @@ const JobList = () => {
                     </p>
                 </div> 
 
-                {["operational-manager", "support-manager"].includes(roles) && (
+                <PermissionGate  permission="create_job">
                     <button
                         onClick={() => navigate("/add-jobs")}
                         className="flex items-center gap-2 px-4 py-2
@@ -65,7 +66,7 @@ const JobList = () => {
                         <Plus size={16} />
                         <span className="text-sm font-medium">Add Job</span>
                     </button>
-                )}
+                </PermissionGate>
 
 
             </div>
@@ -161,7 +162,7 @@ const JobList = () => {
                                     {/* ACTIONS */}
                                     <td className="px-6 py-4">
                                         <div className="flex justify-end gap-2">
-                                          {["operational-manager", "support-manager"].includes(roles) && (
+                                         <PermissionGate  permission="update_job">
                                             <button
                                                 title="Edit Job"
                                                 onClick={() => navigate(`/update-jobs/${job.id}`)}
@@ -170,7 +171,7 @@ const JobList = () => {
                                             >
                                                 <Pencil size={16} />
                                             </button>
-                                          )}
+                                         </PermissionGate>
 
 
                                             <button
