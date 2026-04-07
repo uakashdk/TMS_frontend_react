@@ -44,6 +44,11 @@ const AddTrip = () => {
     const [selectedRoute, setSelectedRoute] = useState(null);
     const [isRouteLocked, setIsRouteLocked] = useState(false);
 
+    const unitOptions = [
+        { value: "LTR", label: "Liters (LTR)" },
+        { value: "KG", label: "Kilograms (KG)" },
+        { value: "TON", label: "Tons (TON)" },
+    ];
 
     const Navigate = useNavigate();
 
@@ -57,6 +62,8 @@ const AddTrip = () => {
         total_distance_km: "",
         trip_start_date: "",
         expected_delivery_date: "",
+        goods_qty: "",
+        gooods_unit: unitOptions[0],
     });
 
     useEffect(() => {
@@ -79,6 +86,22 @@ const AddTrip = () => {
             setLoading(false);
         }
     };
+
+    const reactSelectStyle = {
+        control: (base) => ({
+            ...base,
+            backgroundColor: "#f9fafb",
+            border: "none",
+            boxShadow: "none",
+            minHeight: "38px",
+        }),
+        menu: (base) => ({
+            ...base,
+            zIndex: 20,
+        }),
+    };
+
+
 
     return (
         <div className="min-h-screen bg-fleet-bg p-6 space-y-6">
@@ -237,6 +260,32 @@ const AddTrip = () => {
                         />
                     </div>
 
+
+                    <div>
+                        <label className="label">Goods Quantity</label>
+                        <input
+                            type="number"
+                            className="input"
+                            placeholder="Enter goods quantity"
+                            value={form.goods_qty}
+                            onChange={(e) =>
+                                setForm({ ...form, goods_qty: e.target.value })
+                            }
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Quantity Unit
+                        </label>
+                        <Select
+                            options={unitOptions}
+                            value={unitOptions.find(u => u.value === form.gooods_unit)}
+                            onChange={(val) =>
+                                setForm(prev => ({ ...prev, gooods_unit: val?.value }))
+                            }
+                        />
+                    </div>
                     <div>
                         <label className="label">Route</label>
                         <Select

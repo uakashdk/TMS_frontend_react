@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { AddJob } from "../../../services/jobService/JobService";
 import { getPartyDropdown } from "../../../services/PartyModule/PartyService";
 import { getRouteDropdown } from "../../../services/RouteService/RouteService";
+import { getAllRateContract } from "../../../services/RateContract/RateContract";
 const unitOptions = [
     { value: "LTR", label: "Liters (LTR)" },
     { value: "KG", label: "Kilograms (KG)" },
@@ -45,9 +46,45 @@ const AddJobs = () => {
         dropoff_location: "",
         route_id: null,
         is_party_advance_required: false,
+        rate_contract_id: null,
+        rate_type: "",
+        rate_value: "",
+        freight_amount: 0,
+        freight_basis_value: "",
+        commercial_snapshot: "",
+
     });
     const [partyOptions, setPartyOptions] = useState([]);
     const [routeOptions, setRouteOptions] = useState([]);
+    const [rateContractOptions, setRateContractOptions] = useState([]);
+
+
+
+    useEffect(() => {
+        const fetchRateContracts = async () => {
+            if (!formData.customer_id) {
+                setRateContractOptions([]);
+                return;
+            }
+
+            const res = await getAllRateContract({
+                search: "",
+                page: 1,
+                customer_id: formData.customer_id,
+            });
+
+            const contracts = res?.data?.map((rc) => ({
+                value: rc.id,
+                label: `${rc.freight_basis} - ₹${rc.rate} ${rc.effective_to ? `- Valid till ${rc.effective_to}` : ""
+                    }`,
+            }));
+
+
+            setRateContractOptions(contracts || []);
+        };
+
+        fetchRateContracts();
+    }, [formData.customer_id]);
 
 
     useEffect(() => {
@@ -93,6 +130,13 @@ const AddJobs = () => {
             dropoff_location: formData.dropoff_location,
             route_id: formData.route_id, // ✅ REQUIRED
             is_party_advance_required: formData.is_party_advance_required,
+            rate_contract_id: formData.rate_contract_id,
+            rate_type: formData.rate_type,
+            rate_value: formData.rate_value,
+            freight_amount: formData.freight_amount,
+            freight_basis_value: formData.freight_basis_value,
+            commercial_snapshot: formData.commercial_snapshot,
+
         };
 
 
@@ -295,6 +339,114 @@ const AddJobs = () => {
                          focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
                         />
                     </div>
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Rate Contract
+                        </label>
+
+                        <Select
+                            options={rateContractOptions}
+                            value={rateContractOptions.find(
+                                (opt) => opt.value === formData.rate_contract_id
+                            )}
+                            onChange={(selected) =>
+                                handleChange("rate_contract_id", selected?.value)
+                            }
+                            placeholder={
+                                formData.customer_id
+                                    ? "Select rate contract"
+                                    : "Select customer first"
+                            }
+                            isDisabled={!formData.customer_id}
+                            className="mt-1 text-sm"
+                            styles={reactSelectStyle}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Rate Type
+                        </label>
+                        <Select
+                            options={[
+                                { value: "per_km", label: "Per KM" },
+                                { value: "per_ton", label: "Per Ton" },
+                                { value: "fixed", label: "Fixed" },
+                            ]}
+                            value={
+                                formData.rate_type
+                                    ? { value: formData.rate_type, label: formData.rate_type }
+                                    : null
+                            }
+                            onChange={(val) =>
+                                handleChange("rate_type", val?.value)
+                            }
+                            placeholder="Select rate type"
+                            className="mt-1 text-sm"
+                            styles={reactSelectStyle}
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Rate Value
+                        </label>
+                        <input
+                            type="number"
+                            value={formData.rate_value}
+                            onChange={(e) =>
+                                handleChange("rate_value", e.target.value)
+                            }
+                            placeholder="Enter rate value"
+                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
+    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Freight Amount
+                        </label>
+                        <input
+                            type="number"
+                            value={formData.freight_amount}
+                            onChange={(e) =>
+                                handleChange("freight_amount", e.target.value)
+                            }
+                            placeholder="Enter freight amount"
+                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
+    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
+                        />
+                    </div>
+                    <div>
+                        <label className="text-xs font-medium text-gray-500">
+                            Freight Basis Value
+                        </label>
+                        <input
+                            type="number"
+                            value={formData.freight_basis_value}
+                            onChange={(e) =>
+                                handleChange("freight_basis_value", e.target.value)
+                            }
+                            placeholder="Enter basis value"
+                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
+    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
+                        />
+                    </div>
+                    <div className="md:col-span-2">
+                        <label className="text-xs font-medium text-gray-500">
+                            Commercial Snapshot
+                        </label>
+                        <textarea
+                            value={formData.commercial_snapshot}
+                            onChange={(e) =>
+                                handleChange("commercial_snapshot", e.target.value)
+                            }
+                            placeholder="Enter commercial details snapshot"
+                            rows={3}
+                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
+    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
+                        />
+                    </div>
+
                 </div>
 
                 {/* Actions */}

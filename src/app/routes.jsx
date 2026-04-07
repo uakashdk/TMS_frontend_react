@@ -33,7 +33,10 @@ const UpdateJobs = React.lazy(()=>import("../pages/tms/jobs/UpdateJobs"));
 const AddTripAdvance = React.lazy(()=>import("../pages/tms/Trips/TripAdvance"));
 const TripExpence = React.lazy(()=>import("../pages/tms/Trips/TripExpence"));
 const POD = React.lazy(()=>import("../pages/tms/POD/Pod"));
-
+const RateContract = React.lazy(()=>import("../pages/tms/RateContract/RateContract"));
+const AddRateContract = React.lazy(()=>import("../pages/tms/RateContract/AddRateContract"));
+const PartyAdvance = React.lazy(()=>import("../pages/tms/PartyModule/PartyAdvance"));
+const AddPartyAdvance = React.lazy(()=>import("../pages/tms/PartyModule/AddPartyAdvance"));
 // Route keys for easy reference
 export const routeKeys = {
   LOGIN: "login",
@@ -240,6 +243,31 @@ export const routes = [
     path:"/pod/:tripId",
     element:<POD/>,
     name:"POD"
-  }
-
+  },
+  {
+    path:"/rate-contract",
+    element:<RateContract/>,
+    name:"Rate-contract",
+    permission:"view-rate-contract",
+    module: "Operations",
+  },
+  {
+    path:"/add-rate-contract",
+    element:<AddRateContract/>,
+    name:"Add-rate-contract",
+    permission:"create-rate-contract",
+  },
+  {
+    path:"/part-advance",
+    element:<PartyAdvance/>,
+    name:"Party Advance",
+    permission:"view-party-advance",
+    module:'Operations'
+  },
+  {
+    path:"/add-part-advance",
+    element:<AddPartyAdvance/>,
+    permission:"create-party-advance",
+    name:"Create-party-advance"
+  },
 ];
