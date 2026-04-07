@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000/api/v1/fleetlio",
+  // baseURL: "http://localhost:5000/api/v1/fleetlio",
+  baseURL:"http://15.134.220.228/api/v1/fleetlio",
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
