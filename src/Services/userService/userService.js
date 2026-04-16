@@ -21,6 +21,18 @@ export const userList = async (search = "") => {
   }
 };
 
+export const AssignUserPermission = async (payload)=>{
+  try {
+    const response = await api.post("/Admins/assign-permissions", payload);
+    return response.data;
+  } catch (error) {
+     toast.error(
+      error?.response?.data?.message || "Failed to assign permission"
+    );
+    throw error;
+  }
+}
+
 
 /* ================= GET ROLES ================= */
 export const getAllRoles = async () => {
@@ -62,6 +74,19 @@ export const createNewUser = async (payload) => {
     );
   }
 };
+
+
+export const  AssignPermission   = async (payload) => {
+  try {
+      const response = await api.post("/Admins/assign-permissions", payload);
+      return response.data;
+  } catch (error) {
+     toast.error(
+      error?.response?.data?.message || "Failed to assign permission"
+    );
+    throw error;
+  }
+}
 
 
 export const getUserDetailsById = async (userId) => {

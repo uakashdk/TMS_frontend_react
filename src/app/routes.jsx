@@ -37,6 +37,10 @@ const RateContract = React.lazy(()=>import("../pages/tms/RateContract/RateContra
 const AddRateContract = React.lazy(()=>import("../pages/tms/RateContract/AddRateContract"));
 const PartyAdvance = React.lazy(()=>import("../pages/tms/PartyModule/PartyAdvance"));
 const AddPartyAdvance = React.lazy(()=>import("../pages/tms/PartyModule/AddPartyAdvance"));
+const Roles = React.lazy(()=>import("../pages/tms/Roles/RoleList"));
+const AddRole = React.lazy(()=>import("../pages/tms/Roles/AddRole"));
+const EditRole = React.lazy(()=>import("../pages/tms/Roles/UpdateRole"));
+const UserPermission = React.lazy(()=>import("../pages/tms/user/UserPermission"));
 // Route keys for easy reference
 export const routeKeys = {
   LOGIN: "login",
@@ -256,6 +260,7 @@ export const routes = [
     element:<AddRateContract/>,
     name:"Add-rate-contract",
     permission:"create-rate-contract",
+    hidden: true,
   },
   {
     path:"/part-advance",
@@ -268,6 +273,35 @@ export const routes = [
     path:"/add-part-advance",
     element:<AddPartyAdvance/>,
     permission:"create-party-advance",
-    name:"Create-party-advance"
+    // name:"Create-party-advance"
+    hidden: true,
   },
+  {
+    path:"/roles",
+    element:<Roles/>,
+    name:"Roles",
+    permission:"view_role",
+    module: "Access Control",
+  },
+  { 
+      path:"/add-role",
+      element:<AddRole/>,
+      // name:"Add Role",
+      permission:"create_role",
+       hidden: true,
+  },
+  {
+    path:"/edit-role/:id",
+    element:<EditRole/>,
+    // name:"Edit Role",
+    permission:"edit_role",
+     hidden: true,
+  },
+  {
+    path:"/user-permission/:userId",
+    element:<UserPermission/>,
+    name:"User Permission",
+    hidden: true,
+    permission:"view_user_permission",
+  }
 ];

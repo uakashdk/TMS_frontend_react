@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Eye, Pencil } from "lucide-react";
-import { userList,getUserDetailsById } from "../../../services/userService/userService";
- // adjust path if needed
- import {DocumentUsers} from "../../../services/document/DocumentService"
+import { Eye, Pencil, Shield } from "lucide-react";
+import { userList, getUserDetailsById } from "../../../services/userService/userService";
+// adjust path if needed
+import { DocumentUsers } from "../../../services/document/DocumentService"
 import Select from "react-select";
 import { useSelector } from "react-redux";
 
@@ -30,12 +30,12 @@ const UserList = () => {
   const [documents, setDocuments] = useState([]);
   const [apiUrl, setApiUrl] = useState("");
   const [page, setPage] = useState(1);
-const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const { user } = useSelector((state) => state.auth);
 
   // Example: role stored after login
-const userRole = user.role
+  const userRole = user.role
 
   const roleColorMap = {
     "Company Admin": "bg-blue-100 text-blue-700",
@@ -46,28 +46,28 @@ const userRole = user.role
   };
 
   const canVerify =
-  userRole === "Company-Admin" ||
-  userRole === "super-admin";
+    userRole === "Company-Admin" ||
+    userRole === "super-admin";
 
 
- const fetchUsers = async (searchText = "", pageNo = 1) => {
-  setLoading(true);
+  const fetchUsers = async (searchText = "", pageNo = 1) => {
+    setLoading(true);
 
-  const res = await userList(searchText, pageNo);
+    const res = await userList(searchText, pageNo);
 
-  if (res?.success) {
-    setUsers(res.data || []);
-    setTotalPages(res.pagination?.totalPages || 1);
-  }
+    if (res?.success) {
+      setUsers(res.data || []);
+      setTotalPages(res.pagination?.totalPages || 1);
+    }
 
-  setLoading(false);
-};
+    setLoading(false);
+  };
 
 
 
-useEffect(() => {
-  fetchUsers(search, page);
-}, [search, page]);
+  useEffect(() => {
+    fetchUsers(search, page);
+  }, [search, page]);
 
 
 
@@ -250,6 +250,14 @@ useEffect(() => {
                       >
                         <Pencil size={18} />
                       </button>
+
+                      <button
+                        title="User Permissions"
+                        className="rounded-md p-2 text-purple-600 hover:bg-purple-50 transition"
+                        onClick={() => navigate(`/user-permission/${user.id}`)}
+                      >
+                        <Shield size={18} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -258,39 +266,37 @@ useEffect(() => {
         </table>
 
         {/* Pagination (static for now) */}
-       <div className="flex items-center justify-between px-4 py-3 border-t border-(--color-fleet-border)">
-  <p className="text-sm text-fleet-text-muted">
-    Page {page} of {totalPages}
-  </p>
+        <div className="flex items-center justify-between px-4 py-3 border-t border-(--color-fleet-border)">
+          <p className="text-sm text-fleet-text-muted">
+            Page {page} of {totalPages}
+          </p>
 
-  <div className="flex gap-2">
-    <button
-      disabled={page === 1}
-      onClick={() => setPage((p) => p - 1)}
-      className={`px-3 py-1 text-sm border rounded-md ${
-        page === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-slate-100"
-      }`}
-    >
-      Prev
-    </button>
+          <div className="flex gap-2">
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className={`px-3 py-1 text-sm border rounded-md ${page === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-slate-100"
+                }`}
+            >
+              Prev
+            </button>
 
-    <button className="px-3 py-1 text-sm border rounded-md bg-fleet-primary text-white">
-      {page}
-    </button>
+            <button className="px-3 py-1 text-sm border rounded-md bg-fleet-primary text-white">
+              {page}
+            </button>
 
-    <button
-      disabled={page === totalPages}
-      onClick={() => setPage((p) => p + 1)}
-      className={`px-3 py-1 text-sm border rounded-md ${
-        page === totalPages
-          ? "opacity-50 cursor-not-allowed"
-          : "hover:bg-slate-100"
-      }`}
-    >
-      Next
-    </button>
-  </div>
-</div>
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className={`px-3 py-1 text-sm border rounded-md ${page === totalPages
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-slate-100"
+                }`}
+            >
+              Next
+            </button>
+          </div>
+        </div>
 
       </div>
       {selectedUserId && userDetails && (
@@ -399,13 +405,13 @@ useEffect(() => {
                       }}
                       className="text-sm"
                     />
-                   )} 
+                  )}
 
-                   {!canVerify && ( 
+                  {!canVerify && (
                     <span className="inline-block mt-2 text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 text-gray-600">
                       {doc.status}
                     </span>
-                   )} 
+                  )}
                 </div>
               ))}
             </div>

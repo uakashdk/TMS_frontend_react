@@ -10,9 +10,12 @@ const AppSidebar = () => {
   const { permissions } = useSelector((state) => state.auth);
 
   // Only show routes that user has permission
-  const allowedRoutes = routes.filter(
-    (route) => route.permission && permissions?.includes(route.permission)
-  );
+ const allowedRoutes = routes.filter(
+  (route) =>
+    route.permission &&
+    permissions?.includes(route.permission) &&
+    !route.hidden   // ✅ IMPORTANT
+);
 
   // Optional: group routes by module
   const groupedRoutes = allowedRoutes.reduce((acc, route) => {
