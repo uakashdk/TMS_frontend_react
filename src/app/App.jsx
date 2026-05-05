@@ -11,38 +11,57 @@ const App = () => {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
+  const token = localStorage.getItem("accessToken");
 
-    // 🔴 No token → logout
-    if (!token) {
+  if (!token) {
+    dispatch(clearAuth());
+    setAuthChecked(true);
+    return;
+  }
+
+  const initAuth = async () => {
+    try {
+      const data = await refreshTokenAPI();
+
+      localStorage.setItem("accessToken", data.accessToken);
+
+      dispatch(
+        setLogin({
+          user: data.user,
+          tokens: { access: data.accessToken },
+        })
+      );
+    } catch (err) {
       dispatch(clearAuth());
+    } finally {
       setAuthChecked(true);
-      return;
     }
+  };
 
-    // 🔵 Token exists → refresh
-    const initAuth = async () => {
-      try {
-        const data = await refreshTokenAPI();
+  initAuth();
 
-        // ✅ Persist new access token
-        localStorage.setItem("accessToken", data.accessToken);
+  // ✅ Refresh every 4 minutes (before expiry)
+  const interval = setInterval(async () => {
+    try {
+      const data = await refreshTokenAPI();
 
-        dispatch(
-          setLogin({
-            user: data.user,
-            tokens: { access: data.accessToken },
-          })
-        );
-      } catch (err) {
-        dispatch(clearAuth());
-      } finally {
-        setAuthChecked(true);
-      }
-    };
+      localStorage.setItem("accessToken", data.accessToken);
 
-    initAuth();
-  }, [dispatch]);
+      dispatch(
+        setLogin({
+          user: data.user,
+          tokens: { access: data.accessToken },
+        })
+      );
+    } catch (err) {
+      dispatch(clearAuth());
+    }
+  }, 4 * 60 * 1000); // 4 minutes
+
+  return () => clearInterval(interval);
+
+}, [dispatch]);
+
 
   // ✅ Render AFTER auth check
   if (!authChecked) {

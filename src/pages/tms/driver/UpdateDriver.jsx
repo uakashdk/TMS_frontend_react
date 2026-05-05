@@ -37,22 +37,22 @@ const UpdateDriver = () => {
     const fetchDriver = async () => {
       const res = await geDriverDetailById(id);
 
-      if (res?.success && res?.data?.driverProfile) {
+      if (res?.success) {
+        const admin = res.data.admin;
         const driver = res.data.driverProfile;
 
         setFormData({
-          name: driver.name || "",
-          phone_number: driver.phone_number || "",
-          email_address: driver.email_address || "",
-          driver_license_number: driver.driver_license_number || "",
+          name: driver?.name || "",
+          phone_number: driver?.phone_number || admin.phone || "",
+          email_address: driver?.email_address || admin.email || "",
+          driver_license_number: driver?.driver_license_number || "",
           driver_license_expiry_date:
-            driver.driver_license_expiry_date?.split("T")[0] || ""
+            driver?.driver_license_expiry_date?.split("T")[0] || ""
         });
 
         setDocuments(res.documents || []);
-        setApiUrl(res.api || ""); // ✅ IMPORTANT
+        setApiUrl(res.api || "");
       }
-
       setLoading(false);
     };
 

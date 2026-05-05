@@ -36,21 +36,13 @@ export const AssignUserPermission = async (payload)=>{
 
 /* ================= GET ROLES ================= */
 export const getAllRoles = async () => {
-  try {
-    const token = localStorage.getItem("accessToken");
-
-    const response = await api.get("/Admins/get-roles", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    toast.error(
-      error?.response?.data?.message || "Failed to load roles"
-    );
-  }
+    try {
+        const response = await api.get("/roles/get-all-roles");
+        return response.data;
+    } catch (error) {
+        toast.error("Error fetching roles");
+        throw error;
+    }
 };
 
 /* ================= CREATE USER ================= */

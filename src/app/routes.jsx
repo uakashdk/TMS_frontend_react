@@ -68,7 +68,7 @@ export const routes = [
   {
     path: "/companies",
     element: <Companies />,
-    permission: "companies",
+    permission: "view_company",
     name: "Companies",
     module: "Masters",
   },
@@ -76,11 +76,13 @@ export const routes = [
     path:"/add-new-company",
     element:<AddNewCompany/>,
     name: "Add Company",
+    permission:"create_company",
   },
   {
     path: "/update-company/:companyId",
     element: <UpdateNewCompany />,
     name: "Update Company",
+    
   },
  
   {
@@ -135,10 +137,10 @@ export const routes = [
     name: "Update Vehicle",
   },
   {
-    path:"/vehcile-assign",
+    path:"/vehicle-assign",
     element:<VehicleDriverAssign/>,
     permission:"assign_driver_to_vehicle",
-    name: "Vehicle–Driver Assignment",
+    name: "Vehicle–Driver-Assignment",
     module: "Fleet Mapping",
   },
   {

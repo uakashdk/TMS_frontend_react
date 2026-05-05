@@ -68,6 +68,7 @@ const UpdateNewCompany = () => {
     // ⚠️ documentId is required by your API
     // If not applicable, pass null or first document id
     const documentId = documents?.[0]?.id || 0;
+    console.log("document id=====",documentId)
 
     const res = await updateExistingCompany(
       payload,

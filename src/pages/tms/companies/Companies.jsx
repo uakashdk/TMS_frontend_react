@@ -43,9 +43,9 @@ const Companies = () => {
     setLoading(true);
 
     let response;
-    if (roles === "super-admin") {
+    if (hasPermission("view_company")) {
       response = await getAllCompanies();
-    } else if (hasPermission("view_company") ) {
+    } else if (hasPermission("own_company") ) {
       response = await getMyCompanies();
     }
 
@@ -114,7 +114,7 @@ const Companies = () => {
             </p>
           </div>
 
-       <PermissionGate permission="create-company">
+       <PermissionGate permission="create_company">
             <button
               onClick={() => navigate("/add-new-company")}
               className="bg-blue-600 text-white px-4 py-2 rounded"
