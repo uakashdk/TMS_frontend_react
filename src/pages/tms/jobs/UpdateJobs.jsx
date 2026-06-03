@@ -55,9 +55,11 @@ const UpdateJobs = () => {
 
     const [loading, setLoading] = useState(true);
     const [partyOptions, setPartyOptions] = useState([]);
+    const [jobs, setJobs] = useState([]);
 
     const [formData, setFormData] = useState({
         customer_id: null,
+        job_id: null,
         job_date: "",
         goods_type: null,
         goods_quantity: "",
@@ -69,7 +71,9 @@ const UpdateJobs = () => {
     });
     const [routeOptions, setRouteOptions] = useState([]);
 
+    const JobId = useParams().id;
 
+    console.log("JobId", JobId)
     /* -------------------- FETCH DATA -------------------- */
 
     useEffect(() => {
@@ -80,7 +84,6 @@ const UpdateJobs = () => {
                     getPartyDropdown(),
                     getRouteDropdown(),
                 ]);
-
                 const parties =
                     partyRes?.data
                         ?.filter((p) => p.party_type === "client")
@@ -88,6 +91,8 @@ const UpdateJobs = () => {
                             value: p.party_id,
                             label: p.party_name,
                         })) || [];
+
+                console.log("Filtered Parties:", parties); // Debug log
 
                 const routes = routeRes?.data?.map(r => ({
                     value: r.id,
@@ -100,8 +105,21 @@ const UpdateJobs = () => {
 
                 const job = jobRes?.data;
 
+                setJobs([job]);
+
+                console.log("job.goods_type",job.goods_type)
+
                 setFormData({
-                    customer_id: parties.find(p => p.value === job.customer_id),
+                    customer_id: parties.find(p => p.value === job.customer.id),
+                    job_id: jobs.find(
+                        j => j.id === Number(JobId)
+                    )
+                        ? {
+                            value: Number(JobId),
+                            label: `${job.customer?.party_name} • ${job.pickup_location} → ${job.dropoff_location}`,
+                            route: job.route,
+                        }
+                        : null,
                     job_date: job.job_date?.slice(0, 10),
                     goods_type: goodsOptions.find(g => g.value === job.goods_type),
                     goods_quantity: job.goods_quantity,
@@ -109,7 +127,7 @@ const UpdateJobs = () => {
                     pickup_location: job.pickup_location,
                     dropoff_location: job.dropoff_location,
                     status: job.status ?? 1, // ✅ important
-                    route_id:job.route_id,
+                    route_id: job.route.id,
                 });
 
             } catch (err) {
@@ -139,7 +157,7 @@ const UpdateJobs = () => {
             pickup_location: formData.pickup_location,
             dropoff_location: formData.dropoff_location,
             status: formData.status, // ✅ added
-            route_id:formData.route_id,
+            route_id: formData.route_id,
         };
 
         try {
@@ -157,6 +175,20 @@ const UpdateJobs = () => {
                 Loading job details...
             </div>
         );
+    }
+
+    const selectStyles = {
+        control: (base) => ({
+            ...base,
+            backgroundColor: "#f9fafb",
+            border: "none",
+            boxShadow: "none",
+            minHeight: "38px",
+        }),
+        menu: (base) => ({
+            ...base,
+            zIndex: 20,
+        }),
     }
 
     /* -------------------- UI -------------------- */
@@ -201,60 +233,21 @@ const UpdateJobs = () => {
 
                     </div>
 
-                       <div>
-                                             <label className="label">Job</label>
-                                             <Select
-                                                 styles={selectStyles}
-                                                 placeholder="Select job"
-                                                 options={jobs.map(j => ({
-                                                     value: j.id,
-                                                     label: `${j.customer?.party_name} • ${j.pickup_location} → ${j.dropoff_location}`,
-                                                     route: j.route, // 👈 IMPORTANT
-                                                 }))}
-                                                 onChange={(e) => {
-                                                     // set job
-                                                     setForm(prev => ({ ...prev, job_id: e?.value }));
-                     
-                                                     // if job has route → auto select & lock
-                                                     if (e?.route) {
-                                                         const routeOption = {
-                                                             value: e.route.id,
-                                                             label: e.route.route_name,
-                                                         };
-                     
-                                                         setSelectedRoute(routeOption);
-                                                         setIsRouteLocked(true);
-                     
-                                                         setForm(prev => ({
-                                                             ...prev,
-                                                             route_id: e.route.id,
-                                                             route_summary: e.route.route_name,
-                                                         }));
-                     
-                                                         // find distance from routes list
-                                                         const fullRoute = routes.find(r => r.id === e.route.id);
-                                                         if (fullRoute) {
-                                                             setForm(prev => ({
-                                                                 ...prev,
-                                                                 total_distance_km: fullRoute.distance_km,
-                                                             }));
-                                                         }
-                                                     } else {
-                                                         // no route → allow manual selection
-                                                         setSelectedRoute(null);
-                                                         setIsRouteLocked(false);
-                     
-                                                         setForm(prev => ({
-                                                             ...prev,
-                                                             route_id: null,
-                                                             route_summary: "",
-                                                             total_distance_km: "",
-                                                         }));
-                                                     }
-                                                 }}
-                                             />
-                     
-                                         </div>
+                    <div>
+                        <label className="label">Job</label>
+                         {console.log("formdata job id====", formData.job_id)}
+                        <Select
+                            styles={selectStyles}
+                            value={formData.job_id}
+                            isDisabled={true}
+                            placeholder="Select job"
+                            options={jobs.map(j => ({
+                                value: j.id,
+                                label: `${j.customer?.party_name} • ${j.pickup_location} → ${j.dropoff_location}`,
+                                route: j.route,
+                            }))}
+                        />
+                    </div>
                     {/* Route */}
                     <div>
                         <label className="text-xs font-medium text-gray-500">
@@ -328,6 +321,7 @@ const UpdateJobs = () => {
                         <label className="text-xs font-medium text-gray-500">
                             Goods Type
                         </label>
+                        {console.log("formData.goods_type", formData.goods_type)}
                         <Select
                             options={goodsOptions}
                             value={formData.goods_type}

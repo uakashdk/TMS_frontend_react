@@ -7,468 +7,540 @@ import { getPartyDropdown } from "../../../services/PartyModule/PartyService";
 import { getRouteDropdown } from "../../../services/RouteService/RouteService";
 import { getAllRateContract } from "../../../services/RateContract/RateContract";
 const unitOptions = [
-    { value: "LTR", label: "Liters (LTR)" },
-    { value: "KG", label: "Kilograms (KG)" },
-    { value: "TON", label: "Tons (TON)" },
+  { value: "LTR", label: "Liters (LTR)" },
+  { value: "KG", label: "Kilograms (KG)" },
+  { value: "TON", label: "Tons (TON)" },
 ];
 
 const reactSelectStyle = {
-    control: (base) => ({
-        ...base,
-        backgroundColor: "#f9fafb",
-        border: "none",
-        boxShadow: "none",
-        minHeight: "38px",
-    }),
-    menu: (base) => ({
-        ...base,
-        zIndex: 20,
-    }),
+  control: (base) => ({
+    ...base,
+    backgroundColor: "#f9fafb",
+    border: "none",
+    boxShadow: "none",
+    minHeight: "38px",
+  }),
+  menu: (base) => ({
+    ...base,
+    zIndex: 20,
+  }),
 };
 
 
 const goodsOptions = [
-    { value: "liquid", label: "Liquid" },
-    { value: "solid", label: "Solid" },
-    { value: "gas", label: "Gas" },
+  { value: "liquid", label: "Liquid" },
+  { value: "solid", label: "Solid" },
+  { value: "gas", label: "Gas" },
 ];
 
 const AddJobs = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        customer_id: null,
-        job_date: "",
-        goods_type: null,
-        goods_quantity: "",
-        quantity_units: unitOptions[0],
-        pickup_location: "",
-        dropoff_location: "",
-        route_id: null,
-        is_party_advance_required: false,
-        rate_contract_id: null,
-        rate_type: "",
-        rate_value: "",
-        freight_amount: 0,
-        freight_basis_value: "",
-        commercial_snapshot: "",
+  const [formData, setFormData] = useState({
+    customer_id: null,
+    job_date: "",
+    goods_type: null,
+    goods_quantity: "",
+    quantity_units: unitOptions[0],
+    pickup_location: "",
+    dropoff_location: "",
+    route_id: null,
+    is_party_advance_required: false,
+    rate_contract_id: null,
+    rate_type: "",
+    rate_value: "",
+    freight_amount: 0,
+    freight_basis_value: "",
 
+  });
+  const [partyOptions, setPartyOptions] = useState([]);
+  const [routeOptions, setRouteOptions] = useState([]);
+  const [rateContractOptions, setRateContractOptions] = useState([]);
+
+  useEffect(() => {
+    const fetchRateContracts = async () => {
+      try {
+        if (!formData.customer_id || !formData.route_id) {
+          setRateContractOptions([]);
+
+          setFormData((prev) => ({
+            ...prev,
+            rate_contract_id: null,
+            rate_type: "",
+            rate_value: "",
+            freight_amount: 0,
+            freight_basis_value: "",
+          }));
+
+          return;
+        }
+
+        const res = await getAllRateContract({
+          party_id: formData.customer_id,
+          route_id: formData.route_id,
+          page: 1,
+          limit: 100,
+        });
+
+        const contracts =
+          res?.data?.map((rc) => ({
+            value: rc.id,
+            label: `${rc.freight_basis} - ₹${rc.rate}`,
+            rate: rc.rate,
+            freight_basis: rc.freight_basis,
+            freight_basis_value: rc.freight_basis_value,
+            effective_from: rc.effective_from,
+            effective_to: rc.effective_to,
+          })) || [];
+
+        setRateContractOptions(contracts);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load rate contracts");
+        setRateContractOptions([]);
+      }
+    };
+
+    fetchRateContracts();
+  }, [formData.customer_id, formData.route_id]);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      const partyRes = await getPartyDropdown();
+      const routeRes = await getRouteDropdown();
+
+      const parties = partyRes?.data
+        ?.filter(p => p.party_type === "client")
+        .map(p => ({
+          value: p.party_id,
+          label: p.party_name,
+        }));
+
+      const routes = routeRes?.data?.map(r => ({
+        value: r.id,
+        label: `${r.source_city} → ${r.destination_city}`,
+        distance: r.distance_km,
+      }));
+
+      setPartyOptions(parties || []);
+      setRouteOptions(routes || []);
+    };
+
+    fetchInitialData();
+  }, []);
+
+
+  const handleChange = (name, value) => {
+    setFormData((prev) => {
+      const updated = {
+        ...prev,
+        [name]: value,
+      };
+
+      if (
+        name === "customer_id" ||
+        name === "route_id"
+      ) {
+        updated.rate_contract_id = null;
+        updated.rate_type = "";
+        updated.rate_value = "";
+        updated.freight_amount = 0;
+        updated.freight_basis_value = "";
+      }
+
+      return updated;
     });
-    const [partyOptions, setPartyOptions] = useState([]);
-    const [routeOptions, setRouteOptions] = useState([]);
-    const [rateContractOptions, setRateContractOptions] = useState([]);
+  };
 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  if (!formData.customer_id) {
+    return toast.error("Please select client");
+  }
 
-    useEffect(() => {
-        const fetchRateContracts = async () => {
-            if (!formData.customer_id) {
-                setRateContractOptions([]);
-                return;
-            }
+  if (!formData.route_id) {
+    return toast.error("Please select route");
+  }
 
-            const res = await getAllRateContract({
-                search: "",
-                page: 1,
-                customer_id: formData.customer_id,
-            });
+  if (!formData.rate_contract_id) {
+    return toast.error("Please select rate contract");
+  }
 
-            const contracts = res?.data?.map((rc) => ({
-                value: rc.id,
-                label: `${rc.freight_basis} - ₹${rc.rate} ${rc.effective_to ? `- Valid till ${rc.effective_to}` : ""
-                    }`,
-            }));
+  const payload = {
+    customer_id: formData.customer_id,
+    job_date: formData.job_date,
 
+    goods_type: formData.goods_type?.value,
+    goods_quantity: Number(formData.goods_quantity || 0),
+    quantity_units: formData.quantity_units?.value,
 
-            setRateContractOptions(contracts || []);
-        };
+    pickup_location: formData.pickup_location,
+    dropoff_location: formData.dropoff_location,
 
-        fetchRateContracts();
-    }, [formData.customer_id]);
+    route_id: formData.route_id,
 
+    is_party_advance_required:
+      formData.is_party_advance_required,
 
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            const partyRes = await getPartyDropdown();
-            const routeRes = await getRouteDropdown();
+    rate_contract_id: formData.rate_contract_id,
 
-            const parties = partyRes?.data
-                ?.filter(p => p.party_type === "client")
-                .map(p => ({
-                    value: p.party_id,
-                    label: p.party_name,
-                }));
+    rate_type: formData.rate_type,
+    rate_value: Number(formData.rate_value || 0),
 
-            const routes = routeRes?.data?.map(r => ({
-                value: r.id,
-                label: `${r.source_city} → ${r.destination_city}`,
-                distance: r.distance_km,
-            }));
+    freight_basis_value: Number(
+      formData.freight_basis_value || 0
+    ),
 
-            setPartyOptions(parties || []);
-            setRouteOptions(routes || []);
-        };
+    freight_amount: Number(
+      formData.freight_amount || 0
+    ),
+  };
 
-        fetchInitialData();
-    }, []);
+  try {
+    await AddJob(payload);
 
+    toast.success(
+      "Job created successfully"
+    );
 
-    const handleChange = (name, value) => {
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
+    navigate("/jobs");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  return (
+    <div className="max-w-7xl mx-auto p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">
+          Create New Job
+        </h1>
+        <p className="text-slate-500 mt-1">
+          Create shipment request and assign commercial details
+        </p>
+      </div>
 
-        const payload = {
-            customer_id: formData.customer_id,
-            job_date: formData.job_date,
-            goods_type: formData.goods_type?.value,
-            goods_quantity: formData.goods_quantity,
-            quantity_units: formData.quantity_units?.value,
-            pickup_location: formData.pickup_location,
-            dropoff_location: formData.dropoff_location,
-            route_id: formData.route_id, // ✅ REQUIRED
-            is_party_advance_required: formData.is_party_advance_required,
-            rate_contract_id: formData.rate_contract_id,
-            rate_type: formData.rate_type,
-            rate_value: formData.rate_value,
-            freight_amount: formData.freight_amount,
-            freight_basis_value: formData.freight_basis_value,
-            commercial_snapshot: formData.commercial_snapshot,
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-6"
+      >
+        {/* Basic Details */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-slate-800 mb-6">
+            Basic Information
+          </h2>
 
-        };
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Client
+              </label>
 
-
-        try {
-            await AddJob(payload);
-            toast.success("Job created successfully");
-            navigate("/jobs");
-        } catch (err) { }
-    };
-
-    return (
-        <div className="max-w-5xl mx-auto">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-2xl font-semibold text-[--color-fleet-text-primary]">
-                    Create Job
-                </h1>
-                <p className="text-sm text-[--color-fleet-text-secondary]">
-                    Enter shipment and pickup–drop details
-                </p>
+              <Select
+                options={partyOptions}
+                value={partyOptions.find(
+                  x => x.value === formData.customer_id
+                )}
+                onChange={(val) =>
+                  handleChange(
+                    "customer_id",
+                    val?.value
+                  )
+                }
+                styles={reactSelectStyle}
+              />
             </div>
 
-            {/* Form */}
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white rounded-xl px-8 py-6"
-            >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                    {/* Customer ID */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Customer
-                        </label>
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Job Date
+              </label>
 
-                        <Select
-                            options={partyOptions}
-                            value={partyOptions.find(
-                                (opt) => opt.value === formData.customer_id
-                            )}
-                            onChange={(val) =>
-                                handleChange("customer_id", val?.value)
-                            }
-                            placeholder="Select customer"
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-
-                    </div>
-
-                    {/* Party Advance Required */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Is Party Advance Required?
-                        </label>
-
-                        <div className="flex items-center gap-6 mt-2">
-                            <label className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="radio"
-                                    name="is_party_advance_required"
-                                    value="true"
-                                    checked={formData.is_party_advance_required === true}
-                                    onChange={() =>
-                                        handleChange("is_party_advance_required", true)
-                                    }
-                                />
-                                Yes
-                            </label>
-
-                            <label className="flex items-center gap-2 text-sm">
-                                <input
-                                    type="radio"
-                                    name="is_party_advance_required"
-                                    value="false"
-                                    checked={formData.is_party_advance_required === false}
-                                    onChange={() =>
-                                        handleChange("is_party_advance_required", false)
-                                    }
-                                />
-                                No
-                            </label>
-                        </div>
-                    </div>
-
-
-                    {/* Route */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Route
-                        </label>
-
-                        <Select
-                            options={routeOptions}
-                            value={routeOptions.find(
-                                opt => opt.value === formData.route_id
-                            )}
-                            onChange={(val) =>
-                                handleChange("route_id", val?.value)
-                            }
-                            placeholder="Select route"
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-                    </div>
-
-                    {/* Job Date */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Job Date
-                        </label>
-                        <input
-                            type="date"
-                            value={formData.job_date}
-                            onChange={(e) =>
-                                handleChange("job_date", e.target.value)
-                            }
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-                         focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-
-                    {/* Goods Type */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Goods Type
-                        </label>
-                        <Select
-                            options={goodsOptions}
-                            value={formData.goods_type}
-                            onChange={(val) => handleChange("goods_type", val)}
-                            placeholder="Select goods type"
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-                    </div>
-
-                    {/* Quantity */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Goods Quantity
-                        </label>
-                        <input
-                            type="number"
-                            value={formData.goods_quantity}
-                            onChange={(e) =>
-                                handleChange("goods_quantity", e.target.value)
-                            }
-                            placeholder="Enter quantity"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-                         focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-
-                    {/* Unit */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Quantity Unit
-                        </label>
-                        <Select
-                            options={unitOptions}
-                            value={formData.quantity_units}
-                            onChange={(val) =>
-                                handleChange("quantity_units", val)
-                            }
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-                    </div>
-
-                    {/* Pickup */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Pickup Location
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.pickup_location}
-                            onChange={(e) =>
-                                handleChange("pickup_location", e.target.value)
-                            }
-                            placeholder="Pickup city"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-                         focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-
-                    {/* Drop */}
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Drop-off Location
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.dropoff_location}
-                            onChange={(e) =>
-                                handleChange("dropoff_location", e.target.value)
-                            }
-                            placeholder="Drop city"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-                         focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Rate Contract
-                        </label>
-
-                        <Select
-                            options={rateContractOptions}
-                            value={rateContractOptions.find(
-                                (opt) => opt.value === formData.rate_contract_id
-                            )}
-                            onChange={(selected) =>
-                                handleChange("rate_contract_id", selected?.value)
-                            }
-                            placeholder={
-                                formData.customer_id
-                                    ? "Select rate contract"
-                                    : "Select customer first"
-                            }
-                            isDisabled={!formData.customer_id}
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-                    </div>
-
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Rate Type
-                        </label>
-                        <Select
-                            options={[
-                                { value: "per_km", label: "Per KM" },
-                                { value: "per_ton", label: "Per Ton" },
-                                { value: "fixed", label: "Fixed" },
-                            ]}
-                            value={
-                                formData.rate_type
-                                    ? { value: formData.rate_type, label: formData.rate_type }
-                                    : null
-                            }
-                            onChange={(val) =>
-                                handleChange("rate_type", val?.value)
-                            }
-                            placeholder="Select rate type"
-                            className="mt-1 text-sm"
-                            styles={reactSelectStyle}
-                        />
-                    </div>
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Rate Value
-                        </label>
-                        <input
-                            type="number"
-                            value={formData.rate_value}
-                            onChange={(e) =>
-                                handleChange("rate_value", e.target.value)
-                            }
-                            placeholder="Enter rate value"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Freight Amount
-                        </label>
-                        <input
-                            type="number"
-                            value={formData.freight_amount}
-                            onChange={(e) =>
-                                handleChange("freight_amount", e.target.value)
-                            }
-                            placeholder="Enter freight amount"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-                    <div>
-                        <label className="text-xs font-medium text-gray-500">
-                            Freight Basis Value
-                        </label>
-                        <input
-                            type="number"
-                            value={formData.freight_basis_value}
-                            onChange={(e) =>
-                                handleChange("freight_basis_value", e.target.value)
-                            }
-                            placeholder="Enter basis value"
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-                    <div className="md:col-span-2">
-                        <label className="text-xs font-medium text-gray-500">
-                            Commercial Snapshot
-                        </label>
-                        <textarea
-                            value={formData.commercial_snapshot}
-                            onChange={(e) =>
-                                handleChange("commercial_snapshot", e.target.value)
-                            }
-                            placeholder="Enter commercial details snapshot"
-                            rows={3}
-                            className="w-full mt-1 bg-gray-50 px-3 py-2 rounded-md text-sm
-    focus:outline-none focus:ring-2 focus:ring-[--color-fleet-primary]"
-                        />
-                    </div>
-
-                </div>
-
-                {/* Actions */}
-                <div className="flex justify-end gap-4 mt-10">
-                    <button
-                        type="button"
-                        onClick={() => navigate("/jobs")}
-                        className="text-sm text-gray-600 hover:text-black"
-                    >
-                        Cancel
-                    </button>
-
-                    <button
-                        type="submit"
-                        className="px-6 py-2 rounded-md bg-[rgb(30,136,229)] text-white text-sm hover:bg-[--color-fleet-primary-dark]"
-                    >
-                        Create Job
-                    </button>
-                </div>
-            </form>
+              <input
+                type="date"
+                value={formData.job_date}
+                onChange={(e) =>
+                  handleChange(
+                    "job_date",
+                    e.target.value
+                  )
+                }
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
         </div>
-    );
+
+        {/* Route Details */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-slate-800 mb-6">
+            Route Information
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Route
+              </label>
+
+              <Select
+                options={routeOptions}
+                value={routeOptions.find(
+                  x => x.value === formData.route_id
+                )}
+                onChange={(val) =>
+                  handleChange(
+                    "route_id",
+                    val?.value
+                  )
+                }
+                styles={reactSelectStyle}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Pickup Location
+              </label>
+
+              <input
+                type="text"
+                value={formData.pickup_location}
+                onChange={(e) =>
+                  handleChange(
+                    "pickup_location",
+                    e.target.value
+                  )
+                }
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Drop Location
+              </label>
+
+              <input
+                type="text"
+                value={formData.dropoff_location}
+                onChange={(e) =>
+                  handleChange(
+                    "dropoff_location",
+                    e.target.value
+                  )
+                }
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Commercial Details */}
+        {formData.customer_id &&
+          formData.route_id && (
+            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+              <h2 className="text-lg font-semibold text-slate-800 mb-6">
+                Commercial Details
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">
+                    Rate Contract
+                  </label>
+
+                  <Select
+                    options={rateContractOptions}
+                    value={rateContractOptions.find(
+                      x =>
+                        x.value ===
+                        formData.rate_contract_id
+                    )}
+                    onChange={(selected) => {
+                      if (!selected) return;
+
+                      setFormData((prev) => ({
+                        ...prev,
+                        rate_contract_id:
+                          selected.value,
+                        rate_type:
+                          selected.freight_basis,
+                        rate_value:
+                          selected.rate,
+                        freight_basis_value:
+                          selected.freight_basis_value ||
+                          1,
+                        freight_amount:
+                          selected.rate,
+                      }));
+                    }}
+                    styles={reactSelectStyle}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">
+                    Rate Type
+                  </label>
+
+                  <input
+                    value={formData.rate_type}
+                    readOnly
+                    className="w-full h-11 px-4 rounded-xl border bg-slate-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">
+                    Rate Value
+                  </label>
+
+                  <input
+                    value={formData.rate_value}
+                    readOnly
+                    className="w-full h-11 px-4 rounded-xl border bg-slate-100"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-600 mb-2">
+                    Freight Amount
+                  </label>
+
+                  <input
+                    value={formData.freight_amount}
+                    readOnly
+                    className="w-full h-11 px-4 rounded-xl border bg-green-50 font-semibold text-green-700"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+        {/* Shipment Details */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-slate-800 mb-6">
+            Shipment Details
+          </h2>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Goods Type
+              </label>
+
+              <Select
+                options={goodsOptions}
+                value={formData.goods_type}
+                onChange={(val) =>
+                  handleChange("goods_type", val)
+                }
+                styles={reactSelectStyle}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Quantity
+              </label>
+
+              <input
+                type="number"
+                value={formData.goods_quantity}
+                onChange={(e) =>
+                  handleChange(
+                    "goods_quantity",
+                    e.target.value
+                  )
+                }
+                className="w-full h-11 px-4 rounded-xl border border-slate-200 bg-slate-50"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-600 mb-2">
+                Unit
+              </label>
+
+              <Select
+                options={unitOptions}
+                value={formData.quantity_units}
+                onChange={(val) =>
+                  handleChange(
+                    "quantity_units",
+                    val
+                  )
+                }
+                styles={reactSelectStyle}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Advance */}
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-lg font-semibold text-slate-800 mb-4">
+            Advance Requirement
+          </h2>
+
+          <div className="flex gap-8">
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={
+                  formData.is_party_advance_required
+                }
+                onChange={() =>
+                  handleChange(
+                    "is_party_advance_required",
+                    true
+                  )
+                }
+              />
+              Yes
+            </label>
+
+            <label className="flex items-center gap-2">
+              <input
+                type="radio"
+                checked={
+                  !formData.is_party_advance_required
+                }
+                onChange={() =>
+                  handleChange(
+                    "is_party_advance_required",
+                    false
+                  )
+                }
+              />
+              No
+            </label>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            onClick={() => navigate("/jobs")}
+            className="px-6 py-3 rounded-xl border border-slate-300"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            className="px-8 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+          >
+            Create Job
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 };
 
 export default AddJobs;

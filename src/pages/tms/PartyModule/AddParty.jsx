@@ -14,7 +14,13 @@ const AddParty = () => {
         email: "",
         phone_number: "",
         gsts: [
-            { gst_number: "", state_id: "", gst_registration_type: "regular", is_primary: true }
+            {
+                gst_number: "",
+                state_id: "",
+                gst_registration_type: "regular",
+                gst_nature: "fcm",
+                is_primary: true
+            }
         ],
         addresses: [] // FINAL addresses array
     });
@@ -70,7 +76,6 @@ const AddParty = () => {
                 addresses: [...partyData.addresses, currentAddress],
             });
         }
-        4
 
         // Reset form
         setCurrentAddress({
@@ -82,6 +87,16 @@ const AddParty = () => {
             postal_code: "",
             country: "India",
             is_primary: false
+        });
+    };
+
+    const handleRemoveAddress = (index) => {
+        const updatedAddresses = [...partyData.addresses];
+        updatedAddresses.splice(index, 1);
+
+        setPartyData({
+            ...partyData,
+            addresses: updatedAddresses
         });
     };
 
@@ -118,7 +133,13 @@ const AddParty = () => {
                 contact_person: "",
                 email: "",
                 phone_number: "",
-                gsts: [{ gst_number: "", state_id: "", gst_registration_type: "regular", is_primary: true }],
+                gsts: [{
+                    gst_number: "",
+                    state_id: "",
+                    gst_registration_type: "regular",
+                    gst_nature: "fcm",
+                    is_primary: true
+                }],
                 addresses: [{ address_type: "office", address_line1: "", address_line2: "", city_id: "", state_id: "", postal_code: "", country: "India", is_primary: true }],
             });
         }
@@ -213,6 +234,16 @@ const AddParty = () => {
                         >
                             <option value="regular">Regular</option>
                             <option value="composition">Composition</option>
+                        </select>
+
+                        <select
+                            name="gst_nature"
+                            value={gst.gst_nature}
+                            onChange={(e) => handleChange(e, "gst", idx)}
+                            className="p-3 rounded-md bg-white text-gray-800 focus:outline-none"
+                        >
+                            <option value="fcm">FCM</option>
+                            <option value="rcm">RCM</option>
                         </select>
                     </div>
                 ))}

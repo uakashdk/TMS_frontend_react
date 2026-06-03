@@ -12,7 +12,7 @@ export const getAllRateContract = async ({
 }) => {
   try {
     const response = await api.get(
-      "/rateContract/get-all-rateContract",
+      "/rate-contract/get-all-rateContract",
       {
         params: {
           party_id,
@@ -36,7 +36,7 @@ export const getAllRateContract = async ({
 
 export const createRateContract = async(RateContractData)=>{
     try {
-        const response = await api.post("/rateContract/create-rate-contract",RateContractData);
+        const response = await api.post("/rate-contract/create-rate-contract",RateContractData);
 
         return  response.data
     } catch (error) {
@@ -46,7 +46,7 @@ export const createRateContract = async(RateContractData)=>{
 
 export const getRateContractById = async(id)=>{
     try {
-         const response = await api.get(`/rateContract/getRateContractById/${id}`);
+         const response = await api.get(`/rate-contract/getRateContractById/${id}`);
          return response.data;
     } catch (error) {
         toast.error(error.data.message || "internal server error")
@@ -57,7 +57,7 @@ export const getRateContractById = async(id)=>{
 export const deactivateRateContract = async (rateContractId) => {
   try {
     const response = await api.put(
-      `/rateContract/deactivate-rate-contract/${rateContractId}`
+      `/rate-contract/deactivate-rate-contract/${rateContractId}`
     );
     return response?.data;
   } catch (error) {

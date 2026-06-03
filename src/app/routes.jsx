@@ -254,14 +254,14 @@ export const routes = [
     path:"/rate-contract",
     element:<RateContract/>,
     name:"Rate-contract",
-    permission:"view-rate-contract",
+    permission:"view_rate_contract",
     module: "Operations",
   },
   {
     path:"/add-rate-contract",
     element:<AddRateContract/>,
     name:"Add-rate-contract",
-    permission:"create-rate-contract",
+    permission:"create_rate_contract",
     hidden: true,
   },
   {
