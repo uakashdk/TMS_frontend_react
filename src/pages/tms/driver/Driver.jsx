@@ -140,14 +140,15 @@ const Driver = () => {
       </div>
 
       {/* TABLE */}
+      {/* TABLE */}
       <div className="bg-white rounded-xl shadow-sm overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr className="text-xs uppercase tracking-wide text-slate-500">
               <th className="px-6 py-4 text-left">Driver</th>
-              <th className="px-6 py-4 text-left">Role</th>
+              <th className="px-6 py-4 text-left">Phone</th>
               <th className="px-6 py-4 text-left">Email</th>
-              <th className="px-6 py-4 text-left">Company</th>
+              <th className="px-6 py-4 text-left">Category</th>
               <th className="px-6 py-4 text-left">Status</th>
               <th className="px-6 py-4 text-right">Actions</th>
             </tr>
@@ -159,58 +160,74 @@ const Driver = () => {
                 key={driver.id}
                 className="hover:bg-slate-50 transition"
               >
+                {/* DRIVER */}
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
                     <span className="font-medium text-slate-900">
-                      {driver?.driverProfile?.name}
+                      {driver?.driverProfile?.name || "N/A"}
                     </span>
+
                     <span className="text-xs text-slate-500">
-                      ID #{driver.id}
+                      {driver?.driverProfile?.driver_code || "No driver code"}
                     </span>
                   </div>
                 </td>
 
-                <td className="px-6 py-4 text-slate-700">Driver</td>
-
+                {/* PHONE */}
                 <td className="px-6 py-4 text-slate-700">
-                  {driver.email}
+                  {driver?.driverProfile?.phone_number || driver?.phone || "N/A"}
                 </td>
 
+                {/* EMAIL */}
                 <td className="px-6 py-4 text-slate-700">
-                  Company #{driver.company_id}
+                  {driver?.driverProfile?.email_address || driver?.email || "N/A"}
                 </td>
 
+                {/* CATEGORY */}
+                <td className="px-6 py-4 text-slate-700">
+                  {driver?.driverProfile?.driver_category
+                    ? driver.driverProfile.driver_category
+                      .replace("_", " ")
+                      .replace(/\b\w/g, (char) => char.toUpperCase())
+                    : "N/A"}
+                </td>
+
+                {/* STATUS */}
                 <td className="px-6 py-4">
                   <span
                     className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium
-                      ${driver.isVerifiedDriver
+                ${driver.isVerifiedDriver
                         ? "bg-green-50 text-green-700"
                         : "bg-red-50 text-red-700"
                       }`}
                   >
                     <span
                       className={`h-2 w-2 rounded-full ${driver.isVerifiedDriver
-                        ? "bg-green-600"
-                        : "bg-red-600"
+                          ? "bg-green-600"
+                          : "bg-red-600"
                         }`}
                     />
-                    {driver.isVerifiedDriver ? "Verified" : "Not Verified"}
+
+                    {driver.isVerifiedDriver
+                      ? "Verified"
+                      : "Not Verified"}
                   </span>
                 </td>
 
+                {/* ACTIONS */}
                 <td className="px-6 py-4">
                   <div className="flex justify-end gap-2">
-
                     {hasPermission("update_driver") && (
                       <button
                         title="Edit Driver"
-                        onClick={() => navigate(`/edit-drivers/${driver?.id}`)}
+                        onClick={() =>
+                          navigate(`/edit-drivers/${driver?.id}`)
+                        }
                         className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700"
                       >
                         <Pencil size={16} />
                       </button>
                     )}
-
 
                     <button
                       title="Verify Documents"
@@ -219,8 +236,6 @@ const Driver = () => {
                     >
                       <Eye size={16} />
                     </button>
-
-
                   </div>
                 </td>
               </tr>
@@ -268,130 +283,129 @@ const Driver = () => {
       </div>
       {/* SIDEBAR OVERLAY */}
       {/* OVERLAY (starts BELOW header, never overlaps) */}
-{/* OVERLAY */}
-{openSidebar && (
-  <div
-    onClick={() => setOpenSidebar(false)}
-    className="fixed inset-0 z-40 bg-black/30"
-  />
-)}
+      {/* OVERLAY */}
+      {openSidebar && (
+        <div
+          onClick={() => setOpenSidebar(false)}
+          className="fixed inset-0 z-40 bg-black/30"
+        />
+      )}
 
-{/* SIDEBAR */}
-<div
-  className={`fixed top-0 right-0 z-50 h-screen w-105
+      {/* SIDEBAR */}
+      <div
+        className={`fixed top-0 right-0 z-50 h-screen w-105
   bg-white shadow-2xl
   transform transition-transform duration-300 ease-in-out
   ${openSidebar ? "translate-x-0" : "translate-x-full"}`}
->
-  {/* HEADER */}
-  <div className="flex items-center justify-between px-6 py-5 border-b">
-    <h2 className="text-lg font-semibold text-gray-900">
-      Driver Details
-    </h2>
+      >
+        {/* HEADER */}
+        <div className="flex items-center justify-between px-6 py-5 border-b">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Driver Details
+          </h2>
 
-    <button
-      onClick={() => setOpenSidebar(false)}
-      className="text-gray-400 hover:text-gray-700"
-    >
-      ✕
-    </button>
-  </div>
+          <button
+            onClick={() => setOpenSidebar(false)}
+            className="text-gray-400 hover:text-gray-700"
+          >
+            ✕
+          </button>
+        </div>
 
-  {/* CONTENT */}
-  <div className="p-6 overflow-y-auto h-[calc(100vh-72px)]">
+        {/* CONTENT */}
+        <div className="p-6 overflow-y-auto h-[calc(100vh-72px)]">
 
-    {/* DRIVER INFO */}
-    <div className="space-y-4 pb-6 border-b">
-      <div>
-        <p className="text-xs text-gray-400">Name</p>
-        <p className="text-sm font-medium text-gray-900">
-          {driverDetails?.driverProfile?.name || "N/A"}
-        </p>
-      </div>
-
-      <div>
-        <p className="text-xs text-gray-400">Email</p>
-        <p className="text-sm font-medium text-gray-900 break-all">
-          {driverDetails?.admin?.email}
-        </p>
-      </div>
-
-      <div>
-        <p className="text-xs text-gray-400">Phone</p>
-        <p className="text-sm font-medium text-gray-900">
-          {driverDetails?.admin?.phone}
-        </p>
-      </div>
-
-      <div>
-        <p className="text-xs text-gray-400">Verification</p>
-        <span
-          className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
-          ${
-            driverDetails?.admin?.isVerifiedDriver
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {driverDetails?.admin?.isVerifiedDriver ? "Verified" : "Not Verified"}
-        </span>
-      </div>
-    </div>
-
-    {/* DOCUMENTS */}
-    <div className="pt-6 space-y-4">
-      <h3 className="text-sm font-semibold text-gray-800">
-        Documents ({documents.length})
-      </h3>
-
-      {documents.length === 0 && (
-        <p className="text-sm text-gray-400">
-          No documents uploaded
-        </p>
-      )}
-
-      {documents.map((doc) => (
-        <div
-          key={doc.id}
-          className="rounded-xl border border-gray-200 p-4 bg-gray-50"
-        >
-          <div className="flex justify-between items-start mb-3">
+          {/* DRIVER INFO */}
+          <div className="space-y-4 pb-6 border-b">
             <div>
-              <p className="text-sm font-semibold text-gray-900">
-                {doc.document_group}
-              </p>
-              <p className="text-xs text-gray-400">
-                {doc.document_type}
+              <p className="text-xs text-gray-400">Name</p>
+              <p className="text-sm font-medium text-gray-900">
+                {driverDetails?.driverProfile?.name || "N/A"}
               </p>
             </div>
 
-            <button
-              onClick={() =>
-                window.open(`${baseUrl}/${doc.file_url}`, "_blank")
-              }
-              className="text-indigo-600 text-xs font-medium hover:underline"
-            >
-              View
-            </button>
+            <div>
+              <p className="text-xs text-gray-400">Email</p>
+              <p className="text-sm font-medium text-gray-900 break-all">
+                {driverDetails?.admin?.email}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-400">Phone</p>
+              <p className="text-sm font-medium text-gray-900">
+                {driverDetails?.admin?.phone}
+              </p>
+            </div>
+
+            <div>
+              <p className="text-xs text-gray-400">Verification</p>
+              <span
+                className={`inline-block mt-1 px-2 py-0.5 rounded-full text-xs font-semibold
+          ${driverDetails?.admin?.isVerifiedDriver
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                  }`}
+              >
+                {driverDetails?.admin?.isVerifiedDriver ? "Verified" : "Not Verified"}
+              </span>
+            </div>
           </div>
 
-          {/* STATUS DROPDOWN */}
-          <Select
-            options={statusOptions}
-            value={statusOptions.find(
-              (o) => o.value === doc.status
+          {/* DOCUMENTS */}
+          <div className="pt-6 space-y-4">
+            <h3 className="text-sm font-semibold text-gray-800">
+              Documents ({documents.length})
+            </h3>
+
+            {documents.length === 0 && (
+              <p className="text-sm text-gray-400">
+                No documents uploaded
+              </p>
             )}
-            isSearchable={false}
-            onChange={(opt) =>
-              DocumentUsers(doc.id, opt.value)
-            }
-            className="text-sm"
-          />
+
+            {documents.map((doc) => (
+              <div
+                key={doc.id}
+                className="rounded-xl border border-gray-200 p-4 bg-gray-50"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {doc.document_group}
+                    </p>
+                    <p className="text-xs text-gray-400">
+                      {doc.document_type}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() =>
+                      window.open(`${baseUrl}/${doc.file_url}`, "_blank")
+                    }
+                    className="text-indigo-600 text-xs font-medium hover:underline"
+                  >
+                    View
+                  </button>
+                </div>
+
+                {/* STATUS DROPDOWN */}
+                <Select
+                  options={statusOptions}
+                  value={statusOptions.find(
+                    (o) => o.value === doc.status
+                  )}
+                  isSearchable={false}
+                  onChange={(opt) =>
+                    DocumentUsers(doc.id, opt.value)
+                  }
+                  className="text-sm"
+                />
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</div>
+      </div>
 
 
 

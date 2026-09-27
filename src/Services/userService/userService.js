@@ -33,6 +33,9 @@ export const AssignUserPermission = async (payload)=>{
   }
 }
 
+export const getUserPermissions = async (userId) => {
+    return await api.get(`/Admins/get-user-permission/${userId}`);
+};
 
 /* ================= GET ROLES ================= */
 export const getAllRoles = async () => {
